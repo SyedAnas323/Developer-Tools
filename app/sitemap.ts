@@ -1,9 +1,8 @@
-// app/sitemap.ts
+// 
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Apni website ka base URL yahan likhein (jab deploy karoge to ye change hoga)
-  const baseUrl = 'https://your-domain.com' 
+  const baseUrl = 'https://your-domain.com' // Isko baad mein apna link dena
 
   const tools = [
     'image-compressor',
@@ -18,11 +17,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'background-remover',
   ];
 
-  // Tool pages ka map
   const toolRoutes = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool}`,
     lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
+    changeFrequency: 'monthly' as const, // "as const" zaroori hai
     priority: 0.8,
   }));
 
