@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
   // Jab aap deploy karenge to isko apna live link dena (e.g., https://your-app.vercel.app)
-  const baseUrl = 'https://developer-tools-uz59.vercel.app/' 
+  const baseUrl = 'https://developer-tools-uz59.vercel.app' 
 
   // Aapke saare tools
   const tools = [
