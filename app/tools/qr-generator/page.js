@@ -1,3 +1,5 @@
+// 
+
 'use client';
 
 import { useState } from 'react';
@@ -15,7 +17,8 @@ export default function QRGenerator() {
         placeholder="Enter URL or Text..."
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className="p-4 w-full max-w-md rounded-lg text-black text-lg outline-none focus:ring-2 focus:ring-blue-500"
+        // YAHAN changes kiye hain: bg-gray-800 aur placeholder-white
+        className="p-4 w-full max-w-md rounded-lg bg-gray-800 text-white placeholder-white text-lg outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700"
       />
 
       {/* QR Code Display */}
