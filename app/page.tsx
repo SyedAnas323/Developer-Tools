@@ -164,6 +164,12 @@ export default function Home() {
       desc: 'Remove background from images automatically using AI.', 
       icon: '✂️' 
     },
+        { 
+      name: 'Logo Remover', 
+      path: '/tools/logo-remover', 
+      desc: 'Erase logos and watermarks from images instantly.', 
+      icon: '🎨' 
+    },
   ];
 
   return (
@@ -177,9 +183,9 @@ export default function Home() {
               <span className="text-2xl">🛠️</span>
               <span className="text-xl font-bold text-gray-900">MyTools<span className="text-blue-600">Hub</span></span>
             </div>
-            <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
+            {/* <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
               <span>Made with Next.js</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
