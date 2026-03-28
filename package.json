@@ -9,11 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@imgly/background-removal": "^1.7.0",
     "browser-image-compression": "^2.0.2",
     "jspdf": "^4.2.1",
     "next": "^14.2.35",
-    "onnxruntime-web": "^1.24.3",
     "pdf-lib": "^1.17.1",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
