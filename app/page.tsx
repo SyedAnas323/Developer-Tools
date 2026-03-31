@@ -242,9 +242,9 @@ export default function Home() {
 
       {/* 4. Footer */}
       <footer className="bg-white border-t border-gray-200 py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+        {/* <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
           <p>© {new Date().getFullYear()} MyToolsHub. All rights reserved. Built for Speed.</p>
-        </div>
+        </div> */}
       </footer>
 
     </main>
