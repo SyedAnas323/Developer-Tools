@@ -173,7 +173,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-slate-50 font-sans">
+    <main className="bg-slate-50 font-sans">
       
       {/* 1. Professional Navbar */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">

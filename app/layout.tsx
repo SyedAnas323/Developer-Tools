@@ -63,6 +63,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -131,7 +132,7 @@ export default function RootLayout({
   ];
 
   return (
-    <html lang="en">
+    <html lang="en" className="bg-white">
       <head>
         {/* Global AdSense Script */}
         <Script
@@ -142,9 +143,15 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className={`${inter.className} bg-gray-50 min-h-screen flex flex-col`}>
-        {childrenWithAd}
-      </body>
+     <body className={`${inter.className} min-h-screen bg-gray-50 flex flex-col`}>
+  
+  {/* ✅ FIX START */}
+  <main className="flex-1 w-full flex flex-col">
+    {childrenWithAd}
+  </main>
+  {/* ✅ FIX END */}
+
+</body>
     </html>
   );
 }
