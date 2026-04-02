@@ -170,6 +170,24 @@ export default function Home() {
       desc: 'Erase logos and watermarks from images instantly.', 
       icon: '🎨' 
     },
+     { 
+      name: 'Word to PDF', 
+      path: '/tools/word-to-pdf', 
+      desc: 'Convert Word documents to PDF files.', 
+      icon: '📄' 
+    },
+    {
+      name: 'Edit PDF',
+      path: '/tools/edit-pdf',
+      desc: 'Add text elements to your PDF using iLovePDF.',
+      icon: 'Edit'
+    },
+      { 
+      name: 'Youtube Downloader', 
+      path: '/tools/youtube-downloader', 
+      desc: 'Download YouTube videos in various formats.', 
+      icon: '▶️' 
+    },
   ];
 
   return (
