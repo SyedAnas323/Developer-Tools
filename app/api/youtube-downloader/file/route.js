@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 
 function sanitizeFilename(value) {
   return String(value || 'download')
+    .normalize('NFKD')
+    .replace(/[^\x00-\x7F]/g, '')
     .replace(/[<>:"/\\|?*\u0000-\u001F]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim()

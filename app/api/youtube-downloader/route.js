@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server';
 
 const RAPID_API_URL =
   'https://social-download-all-in-one.p.rapidapi.com/v1/social/autolink';
+export const runtime = 'nodejs';
+
+function getRapidApiKey() {
+  return (
+    process.env.RAPID_API_KEY?.trim() ||
+    process.env.RAPIDAPI_KEY?.trim() ||
+    process.env.YOUTUBE_RAPID_API_KEY?.trim() ||
+    ''
+  );
+}
 
 function normalizeMedia(media, index) {
   return {
@@ -19,11 +29,15 @@ function normalizeMedia(media, index) {
 
 export async function POST(request) {
   try {
-    const rapidApiKey = process.env.RAPID_API_KEY?.trim();
+    const rapidApiKey = getRapidApiKey();
 
     if (!rapidApiKey) {
       return NextResponse.json(
-        { error: true, message: 'Missing RAPID_API_KEY in .env.local' },
+        {
+          error: true,
+          message:
+            'Missing RapidAPI server key. Add RAPID_API_KEY in local .env.local and also in Vercel Project Settings > Environment Variables.',
+        },
         { status: 500 }
       );
     }
