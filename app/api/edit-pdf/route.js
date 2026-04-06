@@ -10,10 +10,16 @@ function clampNumber(value, fallback = 0) {
 
 function mapFont(fontFamily) {
   switch (fontFamily) {
+    case 'Helvetica Bold':
+      return StandardFonts.HelveticaBold;
     case 'Times Roman':
       return StandardFonts.TimesRoman;
+    case 'Times Roman Bold':
+      return StandardFonts.TimesRomanBold;
     case 'Courier':
       return StandardFonts.Courier;
+    case 'Courier Bold':
+      return StandardFonts.CourierBold;
     default:
       return StandardFonts.Helvetica;
   }
@@ -68,6 +74,30 @@ function getBounds(block, font) {
     y: clampNumber(block.y, 0),
     width,
     height: Math.max(lines.length * lineHeight, clampNumber(block.height, lineHeight)),
+  };
+}
+
+function getExpandedEraseBounds(block, font) {
+  const fontSize = clampNumber(block.fontSize, 14);
+  const lines = String(block.text || '').split('\n');
+  const lineHeight = fontSize * 1.25;
+  const bounds = getBounds(block, font);
+  const tokenCount = clampNumber(block.tokenCount, 1);
+  const horizontalPadding = Math.max(16, fontSize * 1.2);
+  const verticalPadding = Math.max(18, fontSize * 1.15);
+  const widthBoost = Math.max(0, (tokenCount - 1) * Math.max(4, fontSize * 0.18));
+  const top = clampNumber(block.y, 0) + fontSize * 0.95 + verticalPadding * 0.35;
+  const bottom =
+    clampNumber(block.y, 0) -
+    Math.max(0, lines.length - 1) * lineHeight -
+    fontSize * 0.45 -
+    verticalPadding * 0.5;
+
+  return {
+    x: Math.max(0, bounds.x - horizontalPadding * 0.5),
+    y: Math.max(0, bottom),
+    width: bounds.width + horizontalPadding + widthBoost,
+    height: Math.max(top - bottom, bounds.height + verticalPadding),
   };
 }
 
@@ -147,13 +177,13 @@ export async function POST(request) {
           fontFamily: block.original.fontFamily || block.fontFamily,
         };
         const originalFont = await getFont(originalBlock.fontFamily);
-        const bounds = getBounds(originalBlock, originalFont);
+        const bounds = getExpandedEraseBounds(originalBlock, originalFont);
 
         page.drawRectangle({
-          x: bounds.x - 8,
-          y: bounds.y - bounds.height * 0.2 - 6,
-          width: bounds.width + 16,
-          height: bounds.height + 12,
+          x: bounds.x,
+          y: bounds.y,
+          width: bounds.width,
+          height: bounds.height,
           color: rgb(1, 1, 1),
         });
       }
@@ -162,16 +192,14 @@ export async function POST(request) {
         continue;
       }
 
-      const lines = String(block.text || '').split('\n');
-
-      lines.forEach((line, index) => {
-        page.drawText(line, {
-          x: block.x,
-          y: block.y - index * block.fontSize * 1.2,
-          size: block.fontSize,
-          font,
-          color: hexToRgb(block.color),
-        });
+      page.drawText(String(block.text || ''), {
+        x: block.x,
+        y: block.y,
+        size: block.fontSize,
+        lineHeight: block.fontSize * 1.2,
+        font,
+        color: hexToRgb(block.color),
+        maxWidth: Math.max(block.width, 24),
       });
     }
 

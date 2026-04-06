@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-const FONT_OPTIONS = ['Helvetica', 'Times Roman', 'Courier'];
+const FONT_OPTIONS = [
+  'Helvetica',
+  'Helvetica Bold',
+  'Times Roman',
+  'Times Roman Bold',
+  'Courier',
+  'Courier Bold',
+];
 const HISTORY_LIMIT = 30;
 
 let pdfJsLoaderPromise = null;
@@ -17,6 +24,20 @@ function makeId() {
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+function normalizeFontFamily(fontName = '') {
+  const normalized = String(fontName).toLowerCase();
+
+  if (normalized.includes('times')) {
+    return normalized.includes('bold') ? 'Times Roman Bold' : 'Times Roman';
+  }
+
+  if (normalized.includes('courier')) {
+    return normalized.includes('bold') ? 'Courier Bold' : 'Courier';
+  }
+
+  return normalized.includes('bold') ? 'Helvetica Bold' : 'Helvetica';
 }
 
 function cloneBlocks(blocks) {
@@ -68,6 +89,7 @@ function groupTextItems(items, pageHeight) {
         width: item.width || Math.max(item.str.length * fontSize * 0.42, 12),
         height: item.height || fontSize,
         fontSize,
+        fontFamily: normalizeFontFamily(item.fontName),
       };
     })
     .sort((a, b) => {
@@ -100,6 +122,7 @@ function groupTextItems(items, pageHeight) {
       12,
       Math.round(sorted.reduce((sum, token) => sum + token.fontSize, 0) / sorted.length)
     );
+    const primaryFont = sorted[0]?.fontFamily || 'Helvetica';
 
     return {
       id: makeId(),
@@ -110,7 +133,7 @@ function groupTextItems(items, pageHeight) {
       width: Math.max(last.x + last.width - first.x, 30),
       height: Math.max(...sorted.map((token) => token.height), fontSize * 1.15),
       fontSize,
-      fontFamily: 'Helvetica',
+      fontFamily: primaryFont,
       color: '#111827',
       deleted: false,
       isNew: false,
@@ -121,8 +144,9 @@ function groupTextItems(items, pageHeight) {
         width: Math.max(last.x + last.width - first.x, 30),
         height: Math.max(...sorted.map((token) => token.height), fontSize * 1.15),
         fontSize,
-        fontFamily: 'Helvetica',
+        fontFamily: primaryFont,
         color: '#111827',
+        tokenCount: sorted.length,
       },
     };
   });
@@ -151,6 +175,34 @@ function hasChanged(block) {
 
 function shouldShowOverlayText(block) {
   return block.isNew || hasChanged(block);
+}
+
+function getPreviewOverlayStyle(block, pageHeight, zoom, isSelected) {
+  const top = (pageHeight - block.y - block.height) * zoom;
+  const left = block.x * zoom;
+  const minWidth = Math.max(block.width * zoom, 24);
+  const minHeight = Math.max(block.height * zoom, block.fontSize * 1.35 * zoom);
+  const changed = hasChanged(block);
+  const showWhiteCover = changed && !block.isNew;
+
+  return {
+    top,
+    left,
+    minWidth,
+    minHeight,
+    fontSize: block.fontSize * zoom,
+    lineHeight: `${block.fontSize * 1.2 * zoom}px`,
+    color: block.deleted ? 'transparent' : block.color,
+    fontFamily: block.fontFamily,
+    whiteSpace: 'pre-wrap',
+    backgroundColor: block.deleted
+      ? 'rgba(255,255,255,0.98)'
+      : showWhiteCover
+        ? 'rgba(255,255,255,0.94)'
+        : isSelected
+          ? 'rgba(239,246,255,0.55)'
+          : 'transparent',
+  };
 }
 
 export default function EditPdfPage() {
@@ -249,16 +301,22 @@ export default function EditPdfPage() {
         }
 
         const page = await pdfRef.current.getPage(pageMeta.pageNumber);
+        const deviceScale = typeof window !== 'undefined' ? Math.max(window.devicePixelRatio || 1, 1) : 1;
         const viewport = page.getViewport({ scale: zoom });
+        const renderViewport = page.getViewport({ scale: zoom * deviceScale });
         const context = canvas.getContext('2d');
 
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
+        canvas.width = renderViewport.width;
+        canvas.height = renderViewport.height;
         canvas.style.width = `${viewport.width}px`;
         canvas.style.height = `${viewport.height}px`;
 
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.imageSmoothingEnabled = true;
+        context.imageSmoothingQuality = 'high';
+
         if (!disposed) {
-          await page.render({ canvasContext: context, viewport }).promise;
+          await page.render({ canvasContext: context, viewport: renderViewport }).promise;
         }
       }
     }
@@ -381,17 +439,24 @@ export default function EditPdfPage() {
       return;
     }
 
+    const inheritedBlock =
+      selectedBlock ||
+      blocks
+        .filter((block) => block.page === currentPage && !block.deleted)
+        .sort((a, b) => Math.abs(a.y - (pageMeta.height - 100)) - Math.abs(b.y - (pageMeta.height - 100)))[0] ||
+      null;
+
     const newBlock = {
       id: makeId(),
       page: currentPage,
       text: 'New text',
-      x: 72,
-      y: pageMeta.height - 100,
-      width: 180,
-      height: 28,
-      fontSize: 18,
-      fontFamily: 'Helvetica',
-      color: '#2563eb',
+      x: inheritedBlock ? inheritedBlock.x : 72,
+      y: inheritedBlock ? inheritedBlock.y - Math.max(inheritedBlock.fontSize * 1.4, 28) : pageMeta.height - 100,
+      width: inheritedBlock ? inheritedBlock.width : 180,
+      height: inheritedBlock ? inheritedBlock.height : 28,
+      fontSize: inheritedBlock ? inheritedBlock.fontSize : 18,
+      fontFamily: inheritedBlock ? inheritedBlock.fontFamily : 'Helvetica',
+      color: inheritedBlock ? inheritedBlock.color : '#111827',
       deleted: false,
       isNew: true,
       original: null,
@@ -754,9 +819,8 @@ export default function EditPdfPage() {
 
                         <div className="absolute inset-0">
                           {currentBlocks.map((block) => {
-                            const top = (page.height - block.y - block.height) * zoom;
                             const showOverlayText = shouldShowOverlayText(block);
-                            const left = block.x * zoom;
+                            const isSelected = selectedId === block.id;
 
                             return (
                               <div
@@ -767,25 +831,15 @@ export default function EditPdfPage() {
                                   setCurrentPage(block.page);
                                 }}
                                 className={`absolute rounded-md border px-1 py-0.5 text-left shadow-sm ${
-                                  selectedId === block.id
+                                  isSelected
                                     ? 'border-blue-500 bg-blue-50/30'
                                     : showOverlayText
                                       ? 'border-amber-300 bg-amber-50/55'
                                       : 'border-transparent bg-transparent hover:border-slate-300/80 hover:bg-slate-100/20'
                                 } ${dragging ? 'cursor-grabbing' : 'cursor-move'}`}
-                                style={{
-                                  top,
-                                  left,
-                                  minWidth: Math.max(block.width * zoom, 24),
-                                  minHeight: Math.max(block.height * zoom, block.fontSize * 1.35 * zoom),
-                                  fontSize: block.fontSize * zoom,
-                                  lineHeight: `${block.fontSize * 1.2 * zoom}px`,
-                                  color: showOverlayText ? block.color : 'transparent',
-                                  fontFamily: block.fontFamily,
-                                  whiteSpace: 'pre-wrap',
-                                }}
+                                style={getPreviewOverlayStyle(block, page.height, zoom, isSelected)}
                               >
-                                {showOverlayText ? block.text : ' '}
+                                {block.deleted ? ' ' : showOverlayText ? block.text : ' '}
                               </div>
                             );
                           })}
