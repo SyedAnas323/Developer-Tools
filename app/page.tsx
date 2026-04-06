@@ -204,7 +204,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 pb-3 md:hidden">
+          <div className="flex flex-wrap items-center justify-center gap-2 pb-3 md:hidden">
             <button
               type="button"
               onClick={scrollToTop}
@@ -212,6 +212,12 @@ export default function Home() {
             >
               Home
             </button>
+            <a
+              href="#about"
+              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            >
+              About
+            </a>
             <div className="relative">
               <button
                 type="button"
@@ -238,7 +244,10 @@ export default function Home() {
                     ))}
                   </div>
                 </div>
-              ) : null}
+                ) : null}
+            </div>
+            <div className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+              {toolCount}+ Free Tools
             </div>
           </div>
         </div>
