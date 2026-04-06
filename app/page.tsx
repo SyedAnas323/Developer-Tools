@@ -1,276 +1,433 @@
-// // // app/page.tsx
-// import Link from 'next/link';
+'use client';
 
-// export default function Home() {
-//   // Tools ki list
-//   const tools = [
-//     { name: 'Image Compressor', 
-//       path: '/tools/image-compressor', 
-//       desc: 'Compress images without losing quality.' 
-//     },
-//     { name: 'PDF Compressor', 
-//       path: '/tools/pdf-compressor', 
-//       desc: 'Reduce PDF file size online.' 
-//     },
-//     { name: 'QR Code Generator', 
-//       path: '/tools/qr-generator', 
-//       desc: 'Create QR codes for URLs instantly.' 
-//     },
-
-//       { 
-//       name: 'Image Compressor', 
-//       path: '/tools/image-compressor', 
-//       desc: 'Reduce image file size without losing quality.' 
-//     },
-//     { 
-//       name: 'PDF Compressor', 
-//       path: '/tools/pdf-compressor', 
-//       desc: 'Compress PDF files to make them smaller for email.' 
-//     },
-//     { 
-//       name: 'QR Code Generator', 
-//       path: '/tools/qr-generator', 
-//       desc: 'Create QR codes for URLs, text, or WiFi instantly.' 
-//     },
-//     { 
-//       name: 'YouTube Thumbnail', 
-//       path: '/tools/youtube-thumbnail', 
-//       desc: 'Download high-quality thumbnails from any YouTube video.' 
-//     },
-//     { 
-//       name: 'Image to PDF', 
-//       path: '/tools/image-to-pdf', 
-//       desc: 'Convert JPG and PNG images into a single PDF file.' 
-//     },
-//     { 
-//       name: 'JSON Formatter', 
-//       path: '/tools/json-formatter', 
-//       desc: 'Validate, beautify, and format JSON data easily.' 
-//     },
-//     { 
-//       name: 'Password Generator', 
-//       path: '/tools/password-generator', 
-//       desc: 'Create strong and secure random passwords instantly.' 
-//     },
-//     { 
-//       name: 'Word Counter', 
-//       path: '/tools/word-counter', 
-//       desc: 'Count words, characters, and sentences in your text.' 
-//     },
-//     { 
-//       name: 'Image Resizer', 
-//       path: '/tools/image-resizer', 
-//       desc: 'Resize images to specific dimensions (width & height).' 
-//     },
-//     { 
-//       name: 'Background Remover', 
-//       path: '/tools/background-remover', 
-//       desc: 'Remove background from images automatically using AI.' 
-//     },
-//   ];
-
-//   return (
-//     <main className="min-h-screen bg-gray-100 p-8">
-//       <div className="max-w-4xl mx-auto text-center">
-//         <h1 className="text-4xl font-bold text-gray-800 mb-4">
-//           My MicroSaaS Tools
-//         </h1>
-//         <p className="text-gray-600 mb-8">
-//           Select a tool below to get started.
-//         </p>
-
-//         {/* Tools ki Grid */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//           {tools.map((tool) => (
-//             <Link 
-//               href={tool.path} 
-//               key={tool.name}
-//               className="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition border border-gray-200"
-//             >
-//               <h2 className="text-2xl font-semibold text-blue-600 mb-2">{tool.name}</h2>
-//               <p className="text-gray-500">{tool.desc}</p>
-//             </Link>
-//           ))}
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }
-
-
-// app/page.tsx
 import Link from 'next/link';
+import { useDeferredValue, useMemo, useState } from 'react';
+
+type Tool = {
+  name: string;
+  path: string;
+  desc: string;
+  icon: string;
+};
 
 export default function Home() {
-  // Cleaned Tools List with Icons
-  const tools = [
-    { 
-      name: 'Image Compressor', 
-      path: '/tools/image-compressor', 
-      desc: 'Reduce image file size without losing quality.', 
-      icon: '🖼️' 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsToolsMenuOpen(false);
+  };
+  const tools: Tool[] = [
+    {
+      name: 'Image Compressor',
+      path: '/tools/image-compressor',
+      desc: 'Reduce image file size without losing quality.',
+      icon: '🖼️',
     },
-    { 
-      name: 'PDF Compressor', 
-      path: '/tools/pdf-compressor', 
-      desc: 'Compress PDF files to make them smaller for email.', 
-      icon: '📄' 
+    {
+      name: 'PDF Compressor',
+      path: '/tools/pdf-compressor',
+      desc: 'Compress PDF files to make them smaller for email.',
+      icon: '📄',
     },
-    { 
-      name: 'QR Code Generator', 
-      path: '/tools/qr-generator', 
-      desc: 'Create QR codes for URLs, text, or WiFi instantly.', 
-      icon: '📱' 
+    {
+      name: 'QR Code Generator',
+      path: '/tools/qr-generator',
+      desc: 'Create QR codes for URLs, text, or WiFi instantly.',
+      icon: '📱',
     },
-    { 
-      name: 'YouTube Thumbnail', 
-      path: '/tools/youtube-thumbnail', 
-      desc: 'Download high-quality thumbnails from any YouTube video.', 
-      icon: '▶️' 
+    {
+      name: 'YouTube Thumbnail',
+      path: '/tools/youtube-thumbnail',
+      desc: 'Download high-quality thumbnails from any YouTube video.',
+      icon: '▶️',
     },
-    { 
-      name: 'Image to PDF', 
-      path: '/tools/image-to-pdf', 
-      desc: 'Convert JPG and PNG images into a single PDF file.', 
-      icon: '📸' 
+    {
+      name: 'Image to PDF',
+      path: '/tools/image-to-pdf',
+      desc: 'Convert JPG and PNG images into a single PDF file.',
+      icon: '📸',
     },
-    { 
-      name: 'JSON Formatter', 
-      path: '/tools/json-formatter', 
-      desc: 'Validate, beautify, and format JSON data easily.', 
-      icon: '{ }' 
+    {
+      name: 'JSON Formatter',
+      path: '/tools/json-formatter',
+      desc: 'Validate, beautify, and format JSON data easily.',
+      icon: '{ }',
     },
-    { 
-      name: 'Password Generator', 
-      path: '/tools/password-generator', 
-      desc: 'Create strong and secure random passwords instantly.', 
-      icon: '🔑' 
+    {
+      name: 'Password Generator',
+      path: '/tools/password-generator',
+      desc: 'Create strong and secure random passwords instantly.',
+      icon: '🔑',
     },
-    { 
-      name: 'Word Counter', 
-      path: '/tools/word-counter', 
-      desc: 'Count words, characters, and sentences in your text.', 
-      icon: '📝' 
+    {
+      name: 'Word Counter',
+      path: '/tools/word-counter',
+      desc: 'Count words, characters, and sentences in your text.',
+      icon: '📝',
     },
-    { 
-      name: 'Image Resizer', 
-      path: '/tools/image-resizer', 
-      desc: 'Resize images to specific dimensions (width & height).', 
-      icon: '↔️' 
+    {
+      name: 'Image Resizer',
+      path: '/tools/image-resizer',
+      desc: 'Resize images to specific dimensions (width & height).',
+      icon: '↔️',
     },
-    { 
-      name: 'Background Remover', 
-      path: '/tools/background-remover', 
-      desc: 'Remove background from images automatically using AI.', 
-      icon: '✂️' 
+    {
+      name: 'Background Remover',
+      path: '/tools/background-remover',
+      desc: 'Remove background from images automatically using AI.',
+      icon: '✂️',
     },
-        { 
-      name: 'Logo Remover', 
-      path: '/tools/logo-remover', 
-      desc: 'Erase logos and watermarks from images instantly.', 
-      icon: '🎨' 
+    {
+      name: 'Logo Remover',
+      path: '/tools/logo-remover',
+      desc: 'Erase logos and watermarks from images instantly.',
+      icon: '🎨',
     },
-     { 
-      name: 'Word to PDF', 
-      path: '/tools/word-to-pdf', 
-      desc: 'Convert Word documents to PDF files.', 
-      icon: '📄' 
+    {
+      name: 'Word to PDF',
+      path: '/tools/word-to-pdf',
+      desc: 'Convert Word documents to PDF files.',
+      icon: '📄',
     },
     {
       name: 'Edit PDF',
       path: '/tools/edit-pdf',
       desc: 'Add text elements to your PDF using iLovePDF.',
-      icon: 'Edit'
+      icon: '✏️',
     },
     {
       name: 'PDF Merge',
       path: '/tools/pdf-merge',
       desc: 'Merge multiple PDF files into one document.',
-      icon: 'PDF'
+      icon: '🗂️',
     },
-      { 
-      name: 'Youtube Downloader', 
-      path: '/tools/youtube-downloader', 
-      desc: 'Download YouTube videos in various formats.', 
-      icon: '▶️' 
+    {
+      name: 'Youtube Downloader',
+      path: '/tools/youtube-downloader',
+      desc: 'Download YouTube videos in various formats.',
+      icon: '⬇️',
     },
   ];
 
+  const toolCount = tools.length;
+  const toolNames = tools.map((tool) => tool.name).join(', ');
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const normalizedQuery = deferredSearchQuery.trim().toLowerCase();
+
+  const visibleTools = useMemo(() => {
+    if (!normalizedQuery) {
+      return tools;
+    }
+
+    const scoreTool = (tool: Tool) => {
+      const name = tool.name.toLowerCase();
+      const desc = tool.desc.toLowerCase();
+
+      if (name.startsWith(normalizedQuery)) return 3;
+      if (name.includes(normalizedQuery)) return 2;
+      if (desc.includes(normalizedQuery)) return 1;
+      return 0;
+    };
+
+    return [...tools]
+      .map((tool) => ({ tool, score: scoreTool(tool) }))
+      .filter(({ score }) => score > 0)
+      .sort((a, b) => b.score - a.score || a.tool.name.localeCompare(b.tool.name))
+      .map(({ tool }) => tool);
+  }, [normalizedQuery, tools]);
+
   return (
-    <main className="bg-slate-50 font-sans">
-      
-      {/* 1. Professional Navbar */}
-      <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">🛠️</span>
-              <span className="text-xl font-bold text-gray-900">MyTools<span className="text-blue-600">Hub</span></span>
+    <main className="bg-slate-50 font-sans text-slate-900">
+      <nav className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-3">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-500 to-cyan-400 text-lg font-black text-white shadow-lg shadow-blue-200">
+                MT
+              </div>
+              <div>
+                <div className="text-2xl font-black tracking-tight text-slate-900">
+                  MyTools<span className="text-blue-600">Hub</span>
+                </div>
+                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
+                  Utility Workspace
+                </div>
+              </div>
+            </Link>
+
+            <div className="hidden items-center gap-2 md:flex">
+              <button
+                type="button"
+                onClick={scrollToTop}
+                className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                Home
+              </button>
+              <a
+                href="#about"
+                className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                About
+              </a>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsToolsMenuOpen((prev) => !prev)}
+                  className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+                >
+                  All Tools
+                </button>
+                {isToolsMenuOpen ? (
+                  <div className="absolute right-0 top-12 max-h-96 w-72 overflow-y-auto rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl">
+                    <div className="mb-2 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
+                      Open Any Tool
+                    </div>
+                    <div className="grid gap-1">
+                      {tools.map((tool) => (
+                        <Link
+                          key={tool.path}
+                          href={tool.path}
+                          onClick={() => setIsToolsMenuOpen(false)}
+                          className="rounded-2xl px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-blue-600"
+                        >
+                          {tool.name}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+              <div className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700">
+                {toolCount}+ Free Tools
+              </div>
             </div>
-            {/* <div className="hidden md:flex items-center gap-4 text-sm text-gray-600">
-              <span>Made with Next.js</span>
-            </div> */}
+          </div>
+
+          <div className="flex items-center justify-center gap-2 pb-3 md:hidden">
+            <button
+              type="button"
+              onClick={scrollToTop}
+              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            >
+              Home
+            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsToolsMenuOpen((prev) => !prev)}
+                className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                All Tools
+              </button>
+              {isToolsMenuOpen ? (
+                <div className="absolute left-1/2 top-12 z-50 max-h-96 w-72 -translate-x-1/2 overflow-y-auto rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl">
+                  <div className="mb-2 px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
+                    Open Any Tool
+                  </div>
+                  <div className="grid gap-1">
+                    {tools.map((tool) => (
+                      <Link
+                        key={tool.path}
+                        href={tool.path}
+                        onClick={() => setIsToolsMenuOpen(false)}
+                        className="rounded-2xl px-3 py-2 text-sm text-slate-700 transition hover:bg-slate-100 hover:text-blue-600"
+                      >
+                        {tool.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       </nav>
 
-      {/* 2. Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
-           Online Developer Tools
-        </h1>
-        <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
-          Boost your productivity with our collection of free, fast, and secure tools. No signup required.
-        </p>
-      </div>
+      <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.30),_transparent_26%),radial-gradient(circle_at_top_right,_rgba(99,102,241,0.34),_transparent_30%),radial-gradient(circle_at_bottom_left,_rgba(14,165,233,0.26),_transparent_30%),linear-gradient(135deg,_#dbe8ff_0%,_#cfd9ff_42%,_#d9f3ff_100%)] px-4 py-20">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute left-10 top-10 h-36 w-36 rounded-full bg-blue-400/55 blur-3xl" />
+          <div className="absolute right-10 top-16 h-48 w-48 rounded-full bg-indigo-400/55 blur-3xl" />
+          <div className="absolute bottom-10 left-1/3 h-40 w-40 rounded-full bg-cyan-300/45 blur-3xl" />
+        </div>
 
-      {/* 3. Tools Grid Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 -mt-10">
-        
-        {/* Grid Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {tools.map((tool) => (
-            <Link 
-              href={tool.path} 
-              key={tool.name}
-              className="group relative bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-blue-400"
-            >
-              <div className="flex items-start gap-4">
-                {/* Icon Box */}
-                <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-2xl group-hover:bg-blue-600 transition-colors duration-300">
-                  {tool.icon}
+        <div className="relative mx-auto max-w-7xl">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/85 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              Fast, useful, and ready in one place
+            </div>
+
+            <h1 className="mt-6 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+              A more polished home for your everyday online tools
+            </h1>
+
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600">
+              Compress files, convert documents, generate QR codes, clean images, and handle quick
+              utility tasks from one professional workspace built for speed and clarity.
+            </p>
+
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <a
+                href="#tools"
+                className="rounded-2xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-700"
+              >
+                Explore All Tools
+              </a>
+              <div className="rounded-2xl border border-white/70 bg-white/75 px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur">
+                No signup, no clutter, just the tools you need.
+              </div>
+            </div>
+
+              <div className="mt-10 grid gap-3 text-left sm:grid-cols-3">
+                <div className="rounded-2xl border border-slate-200 bg-white/85 p-4 shadow-sm">
+                  <p className="text-2xl font-bold text-slate-900">{toolCount}+</p>
+                <p className="mt-1 text-sm text-slate-500">Practical tools</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white/85 p-4 shadow-sm">
+                <p className="text-2xl font-bold text-slate-900">Free</p>
+                <p className="mt-1 text-sm text-slate-500">No signup needed</p>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white/85 p-4 shadow-sm">
+                <p className="text-2xl font-bold text-slate-900">Quick</p>
+                <p className="mt-1 text-sm text-slate-500">Simple workflows</p>
                 </div>
-                
-                {/* Text Content */}
-                <div className="flex-1">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
-                    {tool.name}
-                  </h2>
-                  <p className="text-sm text-gray-500 leading-relaxed">
-                    {tool.desc}
+              </div>
+            </div>
+        </div>
+      </section>
+
+      <section id="tools" className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-[linear-gradient(135deg,_#ffffff_0%,_#fbfdff_52%,_#f1f6ff_100%)] px-5 py-8 shadow-[0_30px_80px_-45px_rgba(37,99,235,0.38)] sm:px-8 lg:px-10 lg:py-10">
+          <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                Tool Library
+              </p>
+              <h2 className="mt-2 text-3xl font-bold text-slate-900">Browse the full collection</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
+                Open the tool you need, finish the task quickly, and move on without unnecessary
+                clutter.
+              </p>
+            </div>
+            <div className="w-full max-w-md">
+              <label className="sr-only" htmlFor="tool-search">
+                Search tools
+              </label>
+              <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+                <input
+                  id="tool-search"
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search any tool by name..."
+                  className="w-full border-0 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {visibleTools.map((tool) => (
+              <Link
+                href={tool.path}
+                key={tool.name}
+                className="group relative rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-blue-50 text-2xl transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white">
+                    {tool.icon}
+                  </div>
+
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-slate-900 transition-colors group-hover:text-blue-600">
+                      {tool.name}
+                    </h3>
+                    <p className="mt-2 text-sm leading-7 text-slate-500">{tool.desc}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          {normalizedQuery && visibleTools.length === 0 ? (
+            <div className="mt-6 rounded-3xl border border-dashed border-slate-300 bg-white px-6 py-8 text-center text-sm text-slate-500">
+              No tool matched "{deferredSearchQuery}". Try another name like `PDF`, `Image`, or
+              `YouTube`.
+            </div>
+          ) : null}
+        </div>
+      </section>
+
+      <section id="about" className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-[linear-gradient(135deg,_#ffffff_0%,_#f8fbff_46%,_#eef4ff_100%)] shadow-[0_30px_80px_-45px_rgba(37,99,235,0.45)]">
+          <div className="grid gap-8 px-6 py-8 lg:grid-cols-[1.15fr_0.85fr] lg:px-10 lg:py-10">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-blue-600">
+                About ToolsHub
+              </p>
+              <h2 className="mt-3 max-w-2xl text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+                One workspace for the online tasks you need most
+              </h2>
+              <p className="mt-5 max-w-3xl text-base leading-8 text-slate-600">
+                MyToolsHub brings together practical tools for file conversion, compression,
+                formatting, editing, downloading, and quick productivity work. Instead of opening
+                different websites for every small task, you can handle everything from one clean
+                place with a faster and more focused workflow.
+              </p>
+
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-3xl border border-white/80 bg-white/90 p-5 shadow-sm">
+                  <h3 className="text-lg font-semibold text-slate-900">What You Can Do</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    Compress files, convert Word documents and images into PDF, merge PDF files,
+                    remove image backgrounds, clean logos, generate QR codes, format JSON, resize
+                    images, count words, create passwords, edit PDFs, download YouTube media, and
+                    save YouTube thumbnails in seconds.
+                  </p>
+                </div>
+                <div className="rounded-3xl border border-white/80 bg-white/90 p-5 shadow-sm">
+                  <h3 className="text-lg font-semibold text-slate-900">Why It Helps</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">
+                    The platform is designed to save time, reduce clutter, and keep everyday tasks
+                    simple. You get fast actions, easy navigation, professional layouts, and tools
+                    that are ready to use without unnecessary complexity.
                   </p>
                 </div>
               </div>
-              
-              {/* Arrow Indicator (Visible on Hover) */}
-              <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity text-blue-600">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <div className="rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-sm">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-600">
+                      Available Tools
+                    </p>
+                    <p className="mt-2 text-3xl font-black text-slate-900">{toolCount}+</p>
+                  </div>
+                  <div className="rounded-2xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-200">
+                    Daily Utility Suite
+                  </div>
+                </div>
+                <p className="mt-4 text-sm leading-7 text-slate-600">{toolNames}</p>
               </div>
-            </Link>
-          ))}
+
+              <div className="rounded-3xl border border-slate-200 bg-slate-900 p-6 text-white shadow-xl shadow-slate-200">
+                <h3 className="text-xl font-semibold">Benefits Of Using ToolsHub</h3>
+                <div className="mt-4 grid gap-3 text-sm leading-7 text-slate-200">
+                  <p>Fast access to multiple tools from one homepage.</p>
+                  <p>Cleaner workflows for conversion, download, editing, and formatting tasks.</p>
+                  <p>Professional white-theme interface that is easy to browse and use.</p>
+                  <p>Helpful tool pages with clear instructions, benefits, and download guidance.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-      </div>
-
-      {/* 4. Footer */}
-      <footer className="bg-white border-t border-gray-200 py-8 mt-12">
-        {/* <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-          <p>© {new Date().getFullYear()} MyToolsHub. All rights reserved. Built for Speed.</p>
-        </div> */}
-      </footer>
-
+      <footer className="border-t border-slate-200 bg-white py-8" />
     </main>
   );
 }
