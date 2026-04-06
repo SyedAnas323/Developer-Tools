@@ -15,24 +15,36 @@ export default function PasswordGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-indigo-900 text-white p-8 text-center flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold mb-6">Password Generator</h1>
-      
-      <div className="bg-white text-black p-6 rounded-lg shadow-xl w-full max-w-md">
-        <div className="flex justify-between mb-4">
-          <label>Length: {length}</label>
-          <input type="range" min="6" max="32" value={length} onChange={(e) => setLength(e.target.value)} />
-        </div>
-        
-        <button onClick={generate} className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 mb-4">
-          Generate Password
-        </button>
+    <div className="min-h-screen bg-white px-4 py-12">
+      <div className="mx-auto max-w-xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+        <h1 className="mb-3 text-3xl font-bold text-slate-900">Password Generator</h1>
+        <p className="mb-8 text-sm text-slate-600">
+          Generate a strong password instantly with a simple white-theme interface.
+        </p>
 
-        {password && (
-          <div className="p-4 bg-gray-100 rounded font-mono text-lg break-all">
-            {password}
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6">
+          <div className="mb-5 flex items-center justify-between gap-4 text-slate-700">
+            <label className="font-medium">Length: {length}</label>
+            <input
+              type="range"
+              min="6"
+              max="32"
+              value={length}
+              onChange={(e) => setLength(e.target.value)}
+              className="w-40 accent-blue-600"
+            />
           </div>
-        )}
+        
+          <button onClick={generate} className="mb-4 w-full rounded-xl bg-blue-600 py-3 font-semibold text-white transition hover:bg-blue-700">
+            Generate Password
+          </button>
+
+          {password && (
+            <div className="rounded-xl border border-slate-200 bg-white p-4 font-mono text-lg break-all text-slate-900">
+              {password}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

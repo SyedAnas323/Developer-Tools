@@ -1,8 +1,12 @@
-export const metadata = {
+import { createToolMetadata } from '../metadata';
+
+export const metadata = createToolMetadata({
   title: 'YouTube Thumbnail Downloader - Download HD Thumbnails',
-  description: 'Download high-quality thumbnails from any YouTube video. Save YouTube video images in HD, SD, or Max Resolution.',
+  description:
+    'Download YouTube thumbnails in max, standard, or high quality from any valid YouTube video URL.',
   keywords: ['youtube thumbnail downloader', 'download youtube thumbnail', 'yt thumbnail saver'],
-};
+  slug: 'youtube-thumbnail',
+});
 
 export default function Layout({ children }) {
   return <>{children}</>;

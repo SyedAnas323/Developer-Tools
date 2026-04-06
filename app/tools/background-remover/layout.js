@@ -1,8 +1,12 @@
-export const metadata = {
+import { createToolMetadata } from '../metadata';
+
+export const metadata = createToolMetadata({
   title: 'Background Remover - Remove Image Background Online',
-  description: 'Remove background from images automatically using AI. 100% free and easy to use.',
+  description:
+    'Remove image backgrounds online, preview the result, and download a transparent PNG in a few clicks.',
   keywords: ['background remover', 'remove background', 'bg remover', 'transparent background'],
-};
+  slug: 'background-remover',
+});
 
 export default function Layout({ children }) {
   return <>{children}</>;

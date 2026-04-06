@@ -182,6 +182,12 @@ export default function Home() {
       desc: 'Add text elements to your PDF using iLovePDF.',
       icon: 'Edit'
     },
+    {
+      name: 'PDF Merge',
+      path: '/tools/pdf-merge',
+      desc: 'Merge multiple PDF files into one document.',
+      icon: 'PDF'
+    },
       { 
       name: 'Youtube Downloader', 
       path: '/tools/youtube-downloader', 

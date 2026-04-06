@@ -1,6 +1,6 @@
-
 'use client';
-import { useState, useRef, useEffect } from 'react';
+
+import { useEffect, useRef, useState } from 'react';
 
 export default function LogoRemover() {
   const [image, setImage] = useState(null);
@@ -8,74 +8,64 @@ export default function LogoRemover() {
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  // Ye function tab chalega jab image state update hogi
   useEffect(() => {
-    if (!image) return;
+    if (!image || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    if (!canvas) return;
-    
     const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.src = image;
     img.onload = () => {
-      // Canvas size set karo
       const maxWidth = 800;
       const scale = img.width > maxWidth ? maxWidth / img.width : 1;
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
 
-      // Image draw karo
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-      // Eraser mode set karo
       ctx.globalCompositeOperation = 'destination-out';
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
-      ctx.lineWidth = 40; // Brush size
-      ctx.strokeStyle = 'rgba(0,0,0,1)'; // Color for destination-out
+      ctx.lineWidth = 40;
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
     };
   }, [image]);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
-    reader.onload = (event) => {
-      setImage(event.target.result); // Isse useEffect trigger hoga
-    };
+    reader.onload = (loadEvent) => setImage(loadEvent.target.result);
     reader.readAsDataURL(file);
   };
 
-  // Mouse Events for Drawing
-  const startDrawing = (e) => {
+  const startDrawing = (event) => {
     if (!canvasRef.current) return;
+
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     const ctx = canvas.getContext('2d');
+
     ctx.beginPath();
-    ctx.moveTo(x, y);
+    ctx.moveTo(event.clientX - rect.left, event.clientY - rect.top);
     setIsDrawing(true);
   };
 
-  const draw = (e) => {
+  const draw = (event) => {
     if (!isDrawing || !canvasRef.current) return;
+
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
     const ctx = canvas.getContext('2d');
-    ctx.lineTo(x, y);
+
+    ctx.lineTo(event.clientX - rect.left, event.clientY - rect.top);
     ctx.stroke();
   };
 
   const stopDrawing = () => {
     if (!canvasRef.current) return;
-    const ctx = canvasRef.current.getContext('2d');
-    ctx.closePath();
+    canvasRef.current.getContext('2d').closePath();
     setIsDrawing(false);
   };
 
@@ -89,41 +79,55 @@ export default function LogoRemover() {
 
   const clearCanvas = () => {
     setImage(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 py-12 px-4 text-center">
-      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Logo Remover</h1>
-        <p className="text-gray-500 mb-6">Upload image and paint over the logo to erase it.</p>
+    <main className="min-h-screen bg-slate-50 px-4 py-10">
+      <div className="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+            Logo Remover
+          </p>
+          <h1 className="mt-3 text-3xl font-bold text-slate-900">
+            Remove simple logos and marks in a cleaner workspace
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Upload an image, paint over the logo area on the canvas, and download the cleaned PNG
+            result when you are done.
+          </p>
+        </div>
 
-        {/* Hidden Input */}
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={handleImageUpload} 
-          className="hidden" 
-          ref={fileInputRef} 
-          id="logoUpload"
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          className="hidden"
+          ref={fileInputRef}
+          id="logo-upload"
         />
 
         {!image ? (
-          // Upload Button
-          <div 
-            onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-blue-200 rounded-lg p-10 hover:border-blue-500 transition bg-blue-50/50 cursor-pointer"
-          >
-            <label htmlFor="logoUpload" className="text-blue-600 font-semibold text-lg cursor-pointer">
-              Click to Upload Image
+          <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+            <label
+              htmlFor="logo-upload"
+              className="flex min-h-[240px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white px-6 text-center transition hover:border-blue-400 hover:bg-blue-50/30"
+            >
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-slate-900">Click to upload an image</p>
+              <p className="mt-2 text-sm text-slate-500">
+                After upload, paint over the area you want to erase.
+              </p>
             </label>
           </div>
         ) : (
-          // Canvas Area
-          <div className="space-y-4">
-            {/* Checkerboard Background for Transparency */}
-            <div 
-              className="inline-block border rounded shadow overflow-hidden relative cursor-crosshair"
+          <div className="mt-8 space-y-5">
+            <div
+              className="inline-block overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
               style={{ background: 'repeating-conic-gradient(#e5e7eb 0% 25%, white 0% 50%) 50% / 16px 16px' }}
             >
               <canvas
@@ -132,20 +136,20 @@ export default function LogoRemover() {
                 onMouseUp={stopDrawing}
                 onMouseMove={draw}
                 onMouseLeave={stopDrawing}
-                className="block" // 'block' to remove bottom spacing
+                className="block cursor-crosshair"
               />
             </div>
-            
-            <div className="flex justify-center gap-4 pt-4">
-              <button 
-                onClick={downloadImage} 
-                className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={downloadImage}
+                className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
               >
                 Download PNG
               </button>
-              <button 
-                onClick={clearCanvas} 
-                className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
+              <button
+                onClick={clearCanvas}
+                className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
               >
                 Reset
               </button>
@@ -153,13 +157,6 @@ export default function LogoRemover() {
           </div>
         )}
       </div>
-    </div>
+    </main>
   );
 }
-
-
-
-
-
-
-

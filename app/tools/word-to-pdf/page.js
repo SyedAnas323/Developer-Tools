@@ -1,143 +1,3 @@
-// 'use client';
-
-// import { useState } from 'react';
-
-// export default function PdfWordConverter() {
-//   const [file, setFile] = useState(null);
-//   const [mode, setMode] = useState('pdf-to-word'); // 'pdf-to-word' ya 'word-to-pdf'
-//   const [loading, setLoading] = useState(false);
-//   const [downloadUrl, setDownloadUrl] = useState(null);
-
-//   const handleFileChange = (e) => {
-//     const selected = e.target.files[0];
-//     if (selected) {
-//       // Check file type
-//       const validTypes = mode === 'pdf-to-word' 
-//         ? ['application/pdf'] 
-//         : ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
-      
-//       if (!validTypes.includes(selected.type)) {
-//         alert(mode === 'pdf-to-word' ? 'Please select PDF file' : 'Please select Word file');
-//         return;
-//       }
-//       setFile(selected);
-//       setDownloadUrl(null);
-//     }
-//   };
-
-//   const handleConvert = async () => {
-//     if (!file) return;
-
-//     setLoading(true);
-
-//     const paths = ['/api/convert', '/api/removebg/convert'];
-//     let res = null;
-//     let errorData = null;
-
-//     try {
-//       for (const path of paths) {
-//         const formData = new FormData();
-//         formData.append('file', file);
-//         formData.append('mode', mode);
-
-//         res = await fetch(path, {
-//           method: 'POST',
-//           body: formData,
-//         });
-
-//         if (res.ok) break;
-        
-//       if (!res.ok) {
-//         try {
-//           errorData = await res.json();
-//         } catch (e) {
-//           errorData = { error: res.statusText };
-//         }
-//       }
-//       }
-
-//       if (!res || !res.ok) {
-//         const errorMsg = errorData?.error || errorData?.message || 'Conversion failed';
-//         throw new Error(errorMsg);
-//       }
-
-//       const blob = await res.blob();
-//       const url = URL.createObjectURL(blob);
-//       setDownloadUrl(url);
-//     } catch (err) {
-//       console.error('Conversion error:', err);
-//       alert('Conversion failed: ' + err.message);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="max-w-2xl mx-auto p-6">
-//       <h1 className="text-3xl font-bold mb-2">PDF ↔ Word Converter</h1>
-//       <p className="text-gray-600 mb-6">Convert PDF to Word or Word to PDF easily</p>
-
-//       {/* Mode Toggle */}
-//       <div className="flex gap-4 mb-6 bg-gray-100 p-1 rounded-lg">
-//         <button
-//           onClick={() => { setMode('pdf-to-word'); setFile(null); setDownloadUrl(null); }}
-//           className={`flex-1 py-2 px-4 rounded-md transition ${
-//             mode === 'pdf-to-word' ? 'bg-white shadow text-blue-600' : 'text-gray-600'
-//           }`}
-//         >
-//           PDF to Word
-//         </button>
-//         <button
-//           onClick={() => { setMode('word-to-pdf'); setFile(null); setDownloadUrl(null); }}
-//           className={`flex-1 py-2 px-4 rounded-md transition ${
-//             mode === 'word-to-pdf' ? 'bg-white shadow text-blue-600' : 'text-gray-600'
-//           }`}
-//         >
-//           Word to PDF
-//         </button>
-//       </div>
-
-//       {/* File Upload */}
-//       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-6 hover:border-blue-500 transition">
-//         <input
-//           type="file"
-//           accept={mode === 'pdf-to-word' ? '.pdf' : '.doc,.docx'}
-//           onChange={handleFileChange}
-//           className="hidden"
-//           id="file-input"
-//         />
-//         <label htmlFor="file-input" className="cursor-pointer">
-//           <div className="text-4xl mb-2">📄</div>
-//           <p className="text-gray-600">
-//             {file ? file.name : `Click to select ${mode === 'pdf-to-word' ? 'PDF' : 'Word'} file`}
-//           </p>
-//         </label>
-//       </div>
-
-//       {/* Convert Button */}
-//       <button
-//         onClick={handleConvert}
-//         disabled={!file || loading}
-//         className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold disabled:bg-gray-400 hover:bg-blue-700 transition"
-//       >
-//         {loading ? 'Converting...' : 'Convert Now'}
-//       </button>
-
-//       {/* Download Button */}
-//       {downloadUrl && (
-//         <a
-//           href={downloadUrl}
-//           download={mode === 'pdf-to-word' ? 'converted.docx' : 'converted.pdf'}
-//           className="block w-full mt-4 bg-green-600 text-white py-3 rounded-lg font-semibold text-center hover:bg-green-700 transition"
-//         >
-//           ⬇ Download File
-//         </a>
-//       )}
-//     </div>
-//   );
-// }
-
-
 'use client';
 
 import { useState } from 'react';
@@ -148,26 +8,29 @@ export default function WordToPdfConverter() {
   const [downloadUrl, setDownloadUrl] = useState(null);
   const [error, setError] = useState('');
 
-  const handleFileChange = (e) => {
-    const selected = e.target.files[0];
+  const handleFileChange = (event) => {
+    const selected = event.target.files[0];
     setError('');
 
-    if (selected) {
-      const validTypes = ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/msword'];
+    if (!selected) return;
 
-      if (!validTypes.includes(selected.type)) {
-        setError('Please select a Word file');
-        return;
-      }
+    const validTypes = [
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword',
+    ];
 
-      if (selected.size > 50 * 1024 * 1024) {
-        setError('File size too large. Max 50MB allowed.');
-        return;
-      }
-
-      setFile(selected);
-      setDownloadUrl(null);
+    if (!validTypes.includes(selected.type)) {
+      setError('Please select a valid Word file.');
+      return;
     }
+
+    if (selected.size > 50 * 1024 * 1024) {
+      setError('File size is too large. Max 50MB is allowed.');
+      return;
+    }
+
+    setFile(selected);
+    setDownloadUrl(null);
   };
 
   const handleConvert = async () => {
@@ -181,24 +44,23 @@ export default function WordToPdfConverter() {
     formData.append('mode', 'word-to-pdf');
 
     try {
-      const res = await fetch('/api/convert', {
+      const response = await fetch('/api/convert', {
         method: 'POST',
         body: formData,
       });
 
-      if (!res.ok) {
-        const contentType = res.headers.get('content-type') || '';
+      if (!response.ok) {
+        const contentType = response.headers.get('content-type') || '';
         if (contentType.includes('application/json')) {
-          const errData = await res.json();
+          const errData = await response.json();
           throw new Error(errData.error || 'Conversion failed');
         }
-        const errText = await res.text();
-        throw new Error(errText || 'Conversion failed');
+
+        throw new Error((await response.text()) || 'Conversion failed');
       }
 
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setDownloadUrl(url);
+      const blob = await response.blob();
+      setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -207,52 +69,71 @@ export default function WordToPdfConverter() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-full max-w-xl p-8 bg-white shadow-none rounded-xl">
-        <h1 className="text-3xl font-bold mb-4 text-gray-800">Word → PDF Converter</h1>
-        <p className="text-gray-600 mb-6">Convert your Word documents to PDF online for free</p>
+    <main className="min-h-screen bg-slate-50 px-4 py-10">
+      <div className="mx-auto max-w-4xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+            Word To PDF
+          </p>
+          <h1 className="mt-3 text-3xl font-bold text-slate-900">
+            Convert Word documents into polished PDF files
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Upload a DOC or DOCX file, generate the PDF version, and download the converted file
+            from the same page.
+          </p>
+        </div>
 
         {error && (
-          <div className="bg-white border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </div>
         )}
 
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center mb-6 hover:border-gray-400 transition cursor-pointer bg-white">
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
           <input
             type="file"
             accept=".doc,.docx"
             onChange={handleFileChange}
             className="hidden"
-            id="file-input"
+            id="word-to-pdf-input"
           />
-          <label htmlFor="file-input" className="cursor-pointer block">
-            <div className="text-5xl mb-2">📄</div>
-            <p className="text-gray-700 font-medium">
-              {file ? file.name : 'Click to select Word file'}
+          <label
+            htmlFor="word-to-pdf-input"
+            className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white px-6 text-center transition hover:border-blue-400 hover:bg-blue-50/30"
+          >
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M7 7h10M7 11h10M7 15h6m7-10v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h10l4 4z" />
+              </svg>
+            </div>
+            <p className="text-lg font-semibold text-slate-900">
+              {file ? file.name : 'Click to upload your Word file'}
             </p>
-            <p className="text-sm text-gray-500 mt-1">Max file size: 50MB</p>
+            <p className="mt-2 text-sm text-slate-500">Supported formats: DOC, DOCX. Max file size: 50MB.</p>
           </label>
         </div>
 
-        <button
-          onClick={handleConvert}
-          disabled={!file || loading}
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold disabled:bg-gray-300 hover:bg-blue-700 transition"
-        >
-          {loading ? 'Converting...' : 'Convert Now'}
-        </button>
-
-        {downloadUrl && (
-          <a
-            href={downloadUrl}
-            download="converted.pdf"
-            className="block w-full mt-4 bg-green-600 text-white py-3 rounded-lg font-semibold text-center hover:bg-green-700 transition"
+        <div className="mt-6 flex flex-wrap gap-3">
+          <button
+            onClick={handleConvert}
+            disabled={!file || loading}
+            className="rounded-2xl bg-blue-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            ⬇ Download PDF
-          </a>
-        )}
+            {loading ? 'Converting...' : 'Convert Now'}
+          </button>
+
+          {downloadUrl && (
+            <a
+              href={downloadUrl}
+              download="converted.pdf"
+              className="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
+            >
+              Download PDF
+            </a>
+          )}
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

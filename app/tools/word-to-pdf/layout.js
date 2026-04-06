@@ -1,8 +1,12 @@
-export const metadata = {
-  title: 'Free PDF to Word Converter Online | Convert Word to PDF',
-  description: 'Convert PDF to Word and Word to PDF online for free. Easy, fast and secure file conversion tool.',
-  keywords: 'pdf to word, word to pdf, convert pdf, pdf converter, docx to pdf',
-};
+import { createToolMetadata } from '../metadata';
+
+export const metadata = createToolMetadata({
+  title: 'Word to PDF Converter - Convert DOC and DOCX to PDF',
+  description:
+    'Convert Word documents to PDF online, then download the generated PDF file in one step.',
+  keywords: 'word to pdf, docx to pdf, doc to pdf, word converter, convert word document',
+  slug: 'word-to-pdf',
+});
 
 export default function Layout({ children }) {
   return children;

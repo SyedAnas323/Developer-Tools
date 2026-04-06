@@ -1,130 +1,194 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import os from 'os';
-import path from 'path';
-import { createRequire } from 'module';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 export const runtime = 'nodejs';
 
-const require = createRequire(import.meta.url);
-
-function normalizeNumber(value, fallback) {
+function clampNumber(value, fallback = 0) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-function buildTextElementPayload(rawElement) {
-  const text = String(rawElement?.text || '').trim();
+function mapFont(fontFamily) {
+  switch (fontFamily) {
+    case 'Times Roman':
+      return StandardFonts.TimesRoman;
+    case 'Courier':
+      return StandardFonts.Courier;
+    default:
+      return StandardFonts.Helvetica;
+  }
+}
 
-  if (!text) {
-    throw new Error('Text element content is required.');
+function hexToRgb(hex) {
+  const cleaned = String(hex || '#111827').replace('#', '');
+  const full = cleaned.length === 3
+    ? cleaned.split('').map((char) => `${char}${char}`).join('')
+    : cleaned;
+  const int = parseInt(full, 16);
+
+  return rgb(
+    ((int >> 16) & 255) / 255,
+    ((int >> 8) & 255) / 255,
+    (int & 255) / 255
+  );
+}
+
+function hasChanged(block) {
+  if (block.isNew) {
+    return !block.deleted;
   }
 
+  if (block.deleted) {
+    return true;
+  }
+
+  return (
+    block.text !== block.original?.text ||
+    block.x !== block.original?.x ||
+    block.y !== block.original?.y ||
+    block.width !== block.original?.width ||
+    block.height !== block.original?.height ||
+    block.fontSize !== block.original?.fontSize ||
+    block.fontFamily !== block.original?.fontFamily ||
+    block.color !== block.original?.color
+  );
+}
+
+function getBounds(block, font) {
+  const lines = String(block.text || '').split('\n');
+  const fontSize = clampNumber(block.fontSize, 14);
+  const lineHeight = fontSize * 1.25;
+  const width = Math.max(
+    ...lines.map((line) => Math.max(font.widthOfTextAtSize(line || ' ', fontSize), 1)),
+    clampNumber(block.width, 1)
+  );
+
   return {
-    text,
-    pages: String(rawElement?.pages || '1'),
-    coordinates: {
-      x: normalizeNumber(rawElement?.coordinates?.x, 80),
-      y: normalizeNumber(rawElement?.coordinates?.y, 80),
-    },
-    dimensions: {
-      w: normalizeNumber(rawElement?.dimensions?.w, 220),
-      h: normalizeNumber(rawElement?.dimensions?.h, 60),
-    },
-    rotation: normalizeNumber(rawElement?.rotation, 0),
-    opacity: normalizeNumber(rawElement?.opacity, 100),
-    font_size: normalizeNumber(rawElement?.font_size, 18),
+    x: clampNumber(block.x, 0),
+    y: clampNumber(block.y, 0),
+    width,
+    height: Math.max(lines.length * lineHeight, clampNumber(block.height, lineHeight)),
   };
 }
 
 export async function POST(request) {
-  let tempDir = null;
-
   try {
     const formData = await request.formData();
     const file = formData.get('file');
-    const elementsRaw = formData.get('elements');
+    const blocksRaw = formData.get('blocks');
 
     if (!file) {
       return NextResponse.json({ error: 'No PDF file uploaded.' }, { status: 400 });
     }
 
-    if (!elementsRaw) {
-      return NextResponse.json({ error: 'No edit elements provided.' }, { status: 400 });
+    if (!blocksRaw) {
+      return NextResponse.json({ error: 'No editable blocks provided.' }, { status: 400 });
     }
 
-    const publicKey = process.env.ILOVEPDF_PUBLIC_KEY?.trim();
-    const secretKey = process.env.ILOVEPDF_SECRET_KEY?.trim();
-
-    if (!publicKey || !secretKey) {
-      return NextResponse.json(
-        { error: 'ILOVEPDF_PUBLIC_KEY or ILOVEPDF_SECRET_KEY is missing in .env.local' },
-        { status: 500 }
-      );
-    }
-
-    let parsedElements;
+    let blocks;
 
     try {
-      parsedElements = JSON.parse(String(elementsRaw));
+      blocks = JSON.parse(String(blocksRaw));
     } catch {
-      return NextResponse.json({ error: 'Invalid elements payload.' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid blocks payload.' }, { status: 400 });
     }
 
-    if (!Array.isArray(parsedElements) || parsedElements.length === 0) {
-      return NextResponse.json({ error: 'At least one text element is required.' }, { status: 400 });
+    if (!Array.isArray(blocks)) {
+      return NextResponse.json({ error: 'Blocks payload must be an array.' }, { status: 400 });
     }
 
-    const ILovePDFApi = require('@ilovepdf/ilovepdf-nodejs');
-    const ILovePDFFile = require('@ilovepdf/ilovepdf-nodejs/ILovePDFFile');
-    const TextModule = require('@ilovepdf/ilovepdf-js-core/tasks/edit/Text');
-    const Text = TextModule.default;
+    const sourceBytes = Buffer.from(await file.arrayBuffer());
+    const pdfDoc = await PDFDocument.load(sourceBytes, { ignoreEncryption: true });
+    const fontCache = {};
 
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'edit-pdf-'));
-    const tempInputPath = path.join(tempDir, file.name || 'input.pdf');
-    const fileBuffer = Buffer.from(await file.arrayBuffer());
+    async function getFont(fontFamily) {
+      const key = mapFont(fontFamily);
 
-    await fs.writeFile(tempInputPath, fileBuffer);
-
-    const instance = new ILovePDFApi(publicKey, secretKey);
-    const task = instance.newTask('editpdf');
-
-    await task.start();
-    await task.addFile(new ILovePDFFile(tempInputPath));
-
-    for (const rawElement of parsedElements) {
-      if (rawElement?.type !== 'text') {
-        throw new Error('This first version only supports text elements.');
+      if (!fontCache[key]) {
+        fontCache[key] = await pdfDoc.embedFont(key);
       }
 
-      task.addElement(new Text(buildTextElementPayload(rawElement)));
+      return fontCache[key];
     }
 
-    await task.process();
-    const output = await task.download();
+    for (const rawBlock of blocks) {
+      const block = {
+        ...rawBlock,
+        x: clampNumber(rawBlock.x, 0),
+        y: clampNumber(rawBlock.y, 0),
+        width: clampNumber(rawBlock.width, 40),
+        height: clampNumber(rawBlock.height, 20),
+        fontSize: clampNumber(rawBlock.fontSize, 14),
+        fontFamily: rawBlock.fontFamily || 'Helvetica',
+        color: rawBlock.color || '#111827',
+        page: clampNumber(rawBlock.page, 1),
+      };
 
-    return new NextResponse(Buffer.from(output), {
+      if (!hasChanged(block)) {
+        continue;
+      }
+
+      const page = pdfDoc.getPage(block.page - 1);
+
+      if (!page) {
+        continue;
+      }
+
+      const font = await getFont(block.fontFamily);
+
+      if (!block.isNew && block.original) {
+        const originalBlock = {
+          ...block.original,
+          x: clampNumber(block.original.x, block.x),
+          y: clampNumber(block.original.y, block.y),
+          width: clampNumber(block.original.width, block.width),
+          height: clampNumber(block.original.height, block.height),
+          fontSize: clampNumber(block.original.fontSize, block.fontSize),
+          fontFamily: block.original.fontFamily || block.fontFamily,
+        };
+        const originalFont = await getFont(originalBlock.fontFamily);
+        const bounds = getBounds(originalBlock, originalFont);
+
+        page.drawRectangle({
+          x: bounds.x - 8,
+          y: bounds.y - bounds.height * 0.2 - 6,
+          width: bounds.width + 16,
+          height: bounds.height + 12,
+          color: rgb(1, 1, 1),
+        });
+      }
+
+      if (block.deleted) {
+        continue;
+      }
+
+      const lines = String(block.text || '').split('\n');
+
+      lines.forEach((line, index) => {
+        page.drawText(line, {
+          x: block.x,
+          y: block.y - index * block.fontSize * 1.2,
+          size: block.fontSize,
+          font,
+          color: hexToRgb(block.color),
+        });
+      });
+    }
+
+    const bytes = await pdfDoc.save();
+
+    return new NextResponse(Buffer.from(bytes), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="edited.pdf"',
       },
     });
   } catch (error) {
-    console.error('Edit PDF error:', error);
-
-    const upstreamError =
-      error?.response?.data?.error ||
-      error?.response?.data?.message ||
-      error?.response?.data?.status_message ||
-      error?.response?.data?.validation_errors?.join?.(', ');
+    console.error('Edit PDF export error:', error);
 
     return NextResponse.json(
-      { error: upstreamError || error.message || 'Failed to edit PDF.' },
+      { error: error.message || 'Failed to export PDF.' },
       { status: 500 }
     );
-  } finally {
-    if (tempDir) {
-      await fs.rm(tempDir, { recursive: true, force: true });
-    }
   }
 }
