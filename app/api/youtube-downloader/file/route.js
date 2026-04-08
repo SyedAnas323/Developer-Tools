@@ -27,6 +27,17 @@ function contentTypeFromExtension(extension) {
 
 export const runtime = 'nodejs';
 
+function isRedirectCandidate(hostname) {
+  const host = String(hostname || '').toLowerCase();
+  return (
+    host.includes('googlevideo.com') ||
+    host.includes('youtube.com') ||
+    host.includes('youtu.be') ||
+    host.includes('tiktokcdn.com') ||
+    host.includes('musical.ly')
+  );
+}
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -59,14 +70,24 @@ export async function GET(request) {
       );
     }
 
-    const upstreamResponse = await fetch(parsed.toString(), {
+    let upstreamResponse = await fetch(parsed.toString(), {
       method: 'GET',
       headers: {
-        'User-Agent': 'Mozilla/5.0',
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+        Accept: '*/*',
+        'Accept-Language': 'en-US,en;q=0.9',
+        Referer: 'https://www.youtube.com/',
+        Origin: 'https://www.youtube.com',
+        Range: 'bytes=0-',
       },
       cache: 'no-store',
       redirect: 'follow',
     });
+
+    if ((upstreamResponse.status === 401 || upstreamResponse.status === 403) && isRedirectCandidate(parsed.hostname)) {
+      return NextResponse.redirect(parsed.toString(), 307);
+    }
 
     if (!upstreamResponse.ok || !upstreamResponse.body) {
       return NextResponse.json(
