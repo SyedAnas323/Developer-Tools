@@ -86,7 +86,7 @@ export async function GET(request) {
     });
 
     if ((upstreamResponse.status === 401 || upstreamResponse.status === 403) && isRedirectCandidate(parsed.hostname)) {
-      return NextResponse.redirect(parsed.toString(), 307);
+     throw new Error('Direct download blocked by source');
     }
 
     if (!upstreamResponse.ok || !upstreamResponse.body) {
