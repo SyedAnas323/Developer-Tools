@@ -27,7 +27,7 @@ function contentTypeFromExtension(extension) {
 
 export const runtime = 'nodejs';
 
-function isRedirectCandidate(hostname) {
+function isProxyBlockedHost(hostname) {
   const host = String(hostname || '').toLowerCase();
   return (
     host.includes('googlevideo.com') ||
@@ -85,8 +85,14 @@ export async function GET(request) {
       redirect: 'follow',
     });
 
-    if ((upstreamResponse.status === 401 || upstreamResponse.status === 403) && isRedirectCandidate(parsed.hostname)) {
-     throw new Error('Direct download blocked by source');
+    if (
+      (upstreamResponse.status === 401 || upstreamResponse.status === 403) &&
+      isProxyBlockedHost(parsed.hostname)
+    ) {
+      return NextResponse.json(
+        { error: true, message: 'Direct download blocked by source' },
+        { status: 409 }
+      );
     }
 
     if (!upstreamResponse.ok || !upstreamResponse.body) {

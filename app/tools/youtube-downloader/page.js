@@ -43,6 +43,24 @@ function buildDownloadUrl(item, title) {
   return `/api/youtube-downloader/file?${params.toString()}`;
 }
 
+async function saveResponseAsDownload(response, fallbackName) {
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const contentDisposition = response.headers.get('content-disposition') || '';
+  const match = contentDisposition.match(/filename="([^"]+)"/i);
+
+  const link = document.createElement('a');
+  link.href = objectUrl;
+  link.download = match?.[1] || fallbackName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  window.setTimeout(() => {
+    URL.revokeObjectURL(objectUrl);
+  }, 1000);
+}
+
 export default function YoutubeDownloaderPage() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -93,30 +111,38 @@ export default function YoutubeDownloaderPage() {
     const downloadUrl = buildDownloadUrl(item, title);
     setDownloadingId(item.id);
     setError('');
+    const fallbackName = `${title || 'youtube-file'}-${item.quality || item.type || 'download'}${
+      item.extension ? `.${item.extension}` : ''
+    }`;
 
     try {
       const response = await fetch(downloadUrl);
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
+        if (data?.message === 'Direct download blocked by source') {
+          const directResponse = await fetch(item.url, {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-store',
+            credentials: 'omit',
+            headers: {
+              Accept: '*/*',
+            },
+          });
+
+          if (!directResponse.ok) {
+            throw new Error(`Source blocked direct download with status ${directResponse.status}.`);
+          }
+
+          await saveResponseAsDownload(directResponse, fallbackName);
+          return;
+        }
+
         throw new Error(data?.message || 'Download failed.');
       }
 
-      const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const contentDisposition = response.headers.get('content-disposition') || '';
-      const match = contentDisposition.match(/filename="([^"]+)"/i);
-      const fallbackName = `${title || 'youtube-file'}-${item.quality || item.type || 'download'}${
-        item.extension ? `.${item.extension}` : ''
-      }`;
-
-      const link = document.createElement('a');
-      link.href = objectUrl;
-      link.download = match?.[1] || fallbackName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(objectUrl);
+      await saveResponseAsDownload(response, fallbackName);
     } catch (downloadError) {
       setError(downloadError.message || 'Download failed.');
     } finally {
@@ -321,8 +347,8 @@ export default function YoutubeDownloaderPage() {
                                 ? `${item.width} x ${item.height}`
                                 : 'Resolution not provided'}
                             </div>
-                            <div className="mt-3 text-xs font-semibold text-blue-600">
-                              {downloadingId === item.id ? 'Downloading...' : 'Download Video'}
+                            <div className="mt-3 text-xs text-slate-500">
+                              {downloadingId === item.id ? 'Downloading...' : 'Click to download'}
                             </div>
                           </button>
                         ))
@@ -347,8 +373,8 @@ export default function YoutubeDownloaderPage() {
                             <div className="mt-1 text-xs text-slate-600">
                               {item.extension?.toUpperCase() || 'FILE'} - {formatDuration(item.duration)}
                             </div>
-                            <div className="mt-3 text-xs font-semibold text-blue-600">
-                              {downloadingId === item.id ? 'Downloading...' : 'Download Audio'}
+                            <div className="mt-3 text-xs text-slate-500">
+                              {downloadingId === item.id ? 'Downloading...' : 'Click to download'}
                             </div>
                           </button>
                         ))
