@@ -33,11 +33,12 @@ function formatDuration(seconds) {
   return `${mins}:${String(secs).padStart(2, '0')}`;
 }
 
-function buildDownloadUrl(item, title) {
+function buildDownloadUrl(item, title, mode = 'fetch') {
   const params = new URLSearchParams({
     url: item.url,
     filename: `${title || 'youtube-file'}-${item.quality || item.type || 'download'}`,
     extension: item.extension || '',
+    mode,
   });
 
   return `/api/youtube-downloader/file?${params.toString()}`;
@@ -108,7 +109,7 @@ export default function YoutubeDownloaderPage() {
   }
 
   async function handleDownload(item, title) {
-    const downloadUrl = buildDownloadUrl(item, title);
+    const downloadUrl = buildDownloadUrl(item, title, 'fetch');
     setDownloadingId(item.id);
     setError('');
     const fallbackName = `${title || 'youtube-file'}-${item.quality || item.type || 'download'}${
@@ -120,22 +121,13 @@ export default function YoutubeDownloaderPage() {
 
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        if (data?.message === 'Direct download blocked by source') {
-          const directResponse = await fetch(item.url, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-store',
-            credentials: 'omit',
-            headers: {
-              Accept: '*/*',
-            },
-          });
-
-          if (!directResponse.ok) {
-            throw new Error(`Source blocked direct download with status ${directResponse.status}.`);
-          }
-
-          await saveResponseAsDownload(directResponse, fallbackName);
+        if (response.status === 409 && data?.message === 'Direct download blocked by source') {
+          const link = document.createElement('a');
+          link.href = buildDownloadUrl(item, title, 'navigate');
+          link.download = fallbackName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
           return;
         }
 
@@ -277,7 +269,7 @@ export default function YoutubeDownloaderPage() {
                 <p>Video files appear in the Video Downloads section with available quality options.</p>
                 <p>Audio files appear in the Audio Downloads section when audio formats are available.</p>
                 <p>Each card shows the file type, quality, and extra details like size or duration.</p>
-                <p>Clicking a card starts the download for the selected format.</p>
+                <p>Clicking a card starts the download flow for the selected format.</p>
               </div>
             </div>
 

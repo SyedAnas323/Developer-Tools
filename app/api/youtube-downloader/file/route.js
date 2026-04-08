@@ -44,6 +44,7 @@ export async function GET(request) {
     const fileUrl = searchParams.get('url');
     const filename = sanitizeFilename(searchParams.get('filename'));
     const extension = String(searchParams.get('extension') || '').toLowerCase();
+    const mode = String(searchParams.get('mode') || 'fetch').toLowerCase();
 
     if (!fileUrl) {
       return NextResponse.json(
@@ -89,6 +90,10 @@ export async function GET(request) {
       (upstreamResponse.status === 401 || upstreamResponse.status === 403) &&
       isProxyBlockedHost(parsed.hostname)
     ) {
+      if (mode === 'navigate') {
+        return NextResponse.redirect(parsed.toString(), 307);
+      }
+
       return NextResponse.json(
         { error: true, message: 'Direct download blocked by source' },
         { status: 409 }
