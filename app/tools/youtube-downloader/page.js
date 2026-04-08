@@ -122,13 +122,9 @@ export default function YoutubeDownloaderPage() {
       if (!response.ok) {
         const data = await response.json().catch(() => null);
         if (response.status === 409 && data?.message === 'Direct download blocked by source') {
-          const link = document.createElement('a');
-          link.href = buildDownloadUrl(item, title, 'navigate');
-          link.download = fallbackName;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          return;
+          throw new Error(
+            'This video host is blocking live server downloads on Vercel. The file link can be detected, but the source server is refusing a reliable forced download.'
+          );
         }
 
         throw new Error(data?.message || 'Download failed.');
