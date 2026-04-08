@@ -46,6 +46,7 @@ function buildDownloadUrl(item, title) {
 export default function YoutubeDownloaderPage() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [downloadingId, setDownloadingId] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
 
@@ -85,6 +86,41 @@ export default function YoutubeDownloaderPage() {
       setError(fetchError.message || 'Request failed.');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleDownload(item, title) {
+    const downloadUrl = buildDownloadUrl(item, title);
+    setDownloadingId(item.id);
+    setError('');
+
+    try {
+      const response = await fetch(downloadUrl);
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        throw new Error(data?.message || 'Download failed.');
+      }
+
+      const blob = await response.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const contentDisposition = response.headers.get('content-disposition') || '';
+      const match = contentDisposition.match(/filename="([^"]+)"/i);
+      const fallbackName = `${title || 'youtube-file'}-${item.quality || item.type || 'download'}${
+        item.extension ? `.${item.extension}` : ''
+      }`;
+
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = match?.[1] || fallbackName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (downloadError) {
+      setError(downloadError.message || 'Download failed.');
+    } finally {
+      setDownloadingId('');
     }
   }
 
@@ -270,10 +306,11 @@ export default function YoutubeDownloaderPage() {
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       {videoMedias.length > 0 ? (
                         videoMedias.map((item) => (
-                          <a
+                          <button
                             key={item.id}
-                            href={buildDownloadUrl(item, result.title)}
-                            className="rounded-2xl border border-slate-200 p-4 transition hover:border-blue-400 hover:bg-blue-50"
+                            type="button"
+                            onClick={() => handleDownload(item, result.title)}
+                            className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-blue-400 hover:bg-blue-50"
                           >
                             <div className="text-sm font-semibold text-slate-900">{item.quality}</div>
                             <div className="mt-1 text-xs text-slate-600">
@@ -284,7 +321,10 @@ export default function YoutubeDownloaderPage() {
                                 ? `${item.width} x ${item.height}`
                                 : 'Resolution not provided'}
                             </div>
-                          </a>
+                            <div className="mt-3 text-xs font-semibold text-blue-600">
+                              {downloadingId === item.id ? 'Downloading...' : 'Download Video'}
+                            </div>
+                          </button>
                         ))
                       ) : (
                         <p className="text-sm text-slate-500">No video links found.</p>
@@ -297,16 +337,20 @@ export default function YoutubeDownloaderPage() {
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
                       {audioMedias.length > 0 ? (
                         audioMedias.map((item) => (
-                          <a
+                          <button
                             key={item.id}
-                            href={buildDownloadUrl(item, result.title)}
-                            className="rounded-2xl border border-slate-200 p-4 transition hover:border-blue-400 hover:bg-blue-50"
+                            type="button"
+                            onClick={() => handleDownload(item, result.title)}
+                            className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-blue-400 hover:bg-blue-50"
                           >
                             <div className="text-sm font-semibold text-slate-900">{item.quality}</div>
                             <div className="mt-1 text-xs text-slate-600">
                               {item.extension?.toUpperCase() || 'FILE'} - {formatDuration(item.duration)}
                             </div>
-                          </a>
+                            <div className="mt-3 text-xs font-semibold text-blue-600">
+                              {downloadingId === item.id ? 'Downloading...' : 'Download Audio'}
+                            </div>
+                          </button>
                         ))
                       ) : (
                         <p className="text-sm text-slate-500">No audio links found.</p>
