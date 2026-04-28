@@ -1,19 +1,17 @@
-import { createToolMetadata } from '../metadata';
+import { createToolMetadata, ToolFaqSchema } from '../metadata';
 
 export const metadata = createToolMetadata({
-  title: 'Edit PDF Online - Add, Update, and Export PDF Text',
+  title: 'Edit PDF Online Free - Add Text to PDF Files Instantly | MyToolsHub',
   description:
-    'Upload a PDF, edit visible text blocks, add new content, preview changes, and download the updated PDF file online.',
-  keywords: [
-    'edit pdf online',
-    'pdf editor',
-    'edit pdf free',
-    'pdf text editor',
-    'download edited pdf',
-  ],
+    'Add text, annotations, and labels to any PDF file online for free. Edit PDF documents without Adobe Acrobat - works in your browser, no signup required.',
+  keywords: ['edit pdf online free', 'add text to pdf free', 'pdf editor no signup', 'annotate pdf online', 'fill pdf form online free'],
   slug: 'edit-pdf',
 });
 
-export default function EditPdfLayout({ children }) {
-  return children;
+export default function Layout({ children }) {
+  return <>
+      {children}
+      <ToolFaqSchema slug='edit-pdf' />
+    </>;
 }
+

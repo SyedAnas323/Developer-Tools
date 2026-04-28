@@ -276,6 +276,7 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://toolshub.cyphersol.com"),
   title: {
     default: "MyToolsHub - Free Online Developer Tools",
     template: "%s | MyToolsHub",
@@ -290,7 +291,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://developer-tools-uz59.vercel.app",
+    url: "https://toolshub.cyphersol.com",
     siteName: "MyToolsHub",
     title: "MyToolsHub - Free Online Tools",
     description: "Collection of free tools for daily tasks.",

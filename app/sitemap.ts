@@ -1,24 +1,26 @@
 import { MetadataRoute } from 'next'
  
 export default function sitemap(): MetadataRoute.Sitemap {
-  // Jab aap deploy karenge to isko apna live link dena (e.g., https://your-app.vercel.app)
-  const baseUrl = 'https://developer-tools-uz59.vercel.app' 
+  const baseUrl = 'https://toolshub.cyphersol.com'
 
-  // Aapke saare tools
   const tools = [
+    'background-remover',
+    'edit-pdf',
     'image-compressor',
-    'pdf-compressor',
-    'qr-generator',
-    'youtube-thumbnail',
+    'image-resizer',
     'image-to-pdf',
     'json-formatter',
+    'logo-remover',
     'password-generator',
+    'pdf-compressor',
+    'pdf-merge',
+    'qr-generator',
     'word-counter',
-    'image-resizer',
-    'background-remover',
+    'word-to-pdf',
+    'youtube-downloader',
+    'youtube-thumbnail',
   ];
 
-  // Tools ka mapping
   const toolRoutes = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool}`,
     lastModified: new Date(),
@@ -26,7 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  // Final Sitemap
   return [
     {
       url: baseUrl,

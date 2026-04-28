@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/Navbar';
 import { usePathname } from 'next/navigation';
+import { TOOL_FAQS } from './faq-data';
 
 const TOOL_CONTENT = {
   'background-remover': {
@@ -233,6 +234,27 @@ function ToolInfoSection({ content }: { content: ToolContent }) {
   );
 }
 
+function ToolFaqSection({ slug }: { slug: string }) {
+  const faqItems = TOOL_FAQS[slug as keyof typeof TOOL_FAQS] || [];
+  if (!faqItems.length) return null;
+
+  return (
+    <section className="mx-auto mt-4 max-w-6xl px-4 pb-12">
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-slate-900">FAQs</h2>
+        <div className="mt-4 space-y-4">
+          {faqItems.map(([question, answer]) => (
+            <article key={question} className="rounded-2xl border border-slate-200 p-4">
+              <h3 className="text-base font-semibold text-slate-900">{question}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-600">{answer}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const slug = pathname.split('/').filter(Boolean).at(-1) || '';
@@ -243,6 +265,7 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
       <Navbar />
       {children}
       <ToolInfoSection content={content} />
+      <ToolFaqSection slug={slug} />
     </div>
   );
 }

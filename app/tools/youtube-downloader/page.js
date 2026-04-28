@@ -138,43 +138,8 @@ export default function YoutubeDownloaderPage() {
     }
   }
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'How do I use this YouTube downloader?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Paste a valid YouTube URL, click Get Download Links, review the available formats, and click the audio or video option you want to download.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Can I download both audio and video files?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Yes. The tool can show separate video and audio download options when they are available for the selected YouTube URL.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'What are the benefits of this downloader?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'It is simple to use, shows multiple file options, lets users choose audio or video, and helps download files quickly from one clean page.',
-        },
-      },
-    ],
-  };
-
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
-      />
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
           <div className="max-w-3xl">

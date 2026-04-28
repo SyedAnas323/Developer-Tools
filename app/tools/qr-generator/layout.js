@@ -1,13 +1,17 @@
-import { createToolMetadata } from '../metadata';
+import { createToolMetadata, ToolFaqSchema } from '../metadata';
 
 export const metadata = createToolMetadata({
-  title: 'Free QR Code Generator - Create QR Codes Online',
+  title: 'Free QR Code Generator - Create QR Codes for URL, Text & WiFi | MyToolsHub',
   description:
-    'Create QR codes for URLs, text, and other content online, preview them instantly, and download the QR image.',
-  keywords: ['qr code generator', 'create qr code', 'free qr code', 'qr maker'],
+    'Generate free QR codes instantly for URLs, text, email, phone numbers, or WiFi credentials. Download in PNG format. No signup, no watermark, 100% free.',
+  keywords: ['qr code generator free', 'create qr code online', 'qr code generator for url', 'wifi qr code generator', 'free qr code no signup'],
   slug: 'qr-generator',
 });
 
 export default function Layout({ children }) {
-  return <>{children}</>;
+  return <>
+      {children}
+      <ToolFaqSchema slug='qr-generator' />
+    </>;
 }
+

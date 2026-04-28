@@ -1,16 +1,17 @@
 import { MetadataRoute } from 'next'
  
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = 'https://developer-tools-uz59.vercel.app' // Apna live link yahan dalna
+  const baseUrl = 'https://toolshub.cyphersol.com'
   
   return {
     rules: [
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/private/'], // API routes ko index na kare
+        disallow: ['/api/', '/private/'],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`, // Sitemap ka link
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   }
 }

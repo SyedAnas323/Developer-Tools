@@ -1,20 +1,17 @@
-import { createToolMetadata } from '../metadata';
+import { createToolMetadata, ToolFaqSchema } from '../metadata';
 
 export const metadata = createToolMetadata({
-  title: 'YouTube Downloader - Download YouTube Video and Audio',
+  title: 'YouTube Video Downloader Online - Save Videos in MP4 Free | MyToolsHub',
   description:
-    'Paste a YouTube URL, choose a video or audio format, and download the file quickly from one clean page.',
-  keywords: [
-    'youtube downloader',
-    'download youtube video',
-    'download youtube audio',
-    'youtube mp4 downloader',
-    'youtube mp3 downloader',
-    'online youtube downloader',
-  ],
+    'Download YouTube videos online in MP4 format at various quality levels. Paste a YouTube URL and save the video to your device instantly. Free tool, no signup.',
+  keywords: ['youtube video downloader', 'download youtube video mp4', 'save youtube video online', 'youtube to mp4 free', 'download youtube shorts'],
   slug: 'youtube-downloader',
 });
 
-export default function YoutubeDownloaderLayout({ children }) {
-  return children;
+export default function Layout({ children }) {
+  return <>
+      {children}
+      <ToolFaqSchema slug='youtube-downloader' />
+    </>;
 }
+

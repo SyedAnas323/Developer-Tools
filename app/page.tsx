@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useDeferredValue, useMemo, useState } from 'react';
 
@@ -112,6 +113,36 @@ export default function Home() {
 
   const toolCount = tools.length;
   const toolNames = tools.map((tool) => tool.name).join(', ');
+  const aboutBlogs = [
+    {
+      title: 'How to compress PDF files without losing clarity',
+      excerpt:
+        'Shrink large PDF documents for email, forms, and uploads while keeping the pages easy to read.',
+      image: '/images/blog-pdf-compress.svg',
+      href: '/tools/pdf-compressor',
+    },
+    {
+      title: 'Convert image collections into a clean PDF in minutes',
+      excerpt:
+        'Turn JPG and PNG files into one organized PDF document for sharing, printing, or storage.',
+      image: '/images/blog-image-pdf.svg',
+      href: '/tools/image-to-pdf',
+    },
+    {
+      title: 'Edit PDF sections with a faster visual workflow',
+      excerpt:
+        'Update text, add new blocks, and prepare a polished export from one focused editing screen.',
+      image: '/images/blog-edit-pdf.svg',
+      href: '/tools/edit-pdf',
+    },
+    {
+      title: 'Find and save YouTube media from one simple page',
+      excerpt:
+        'Paste a video link, review the available media options, and move quickly to the format you need.',
+      image: '/images/blog-youtube-download.svg',
+      href: '/tools/youtube-downloader',
+    },
+  ];
   const deferredSearchQuery = useDeferredValue(searchQuery);
   const normalizedQuery = deferredSearchQuery.trim().toLowerCase();
 
@@ -136,6 +167,47 @@ export default function Home() {
       .sort((a, b) => b.score - a.score || a.tool.name.localeCompare(b.tool.name))
       .map(({ tool }) => tool);
   }, [normalizedQuery, tools]);
+
+  const faqItems = [
+    {
+      question: 'Is MyToolsHub free to use?',
+      answer:
+        'Yes. All tools are free to use with no signup requirement for standard usage.',
+    },
+    {
+      question: 'Do I need to install any software?',
+      answer:
+        'No. All tools run directly in your browser, so you do not need to install anything.',
+    },
+    {
+      question: 'Can I use these tools on mobile devices?',
+      answer:
+        'Yes. MyToolsHub tools are accessible on desktop and mobile browsers.',
+    },
+    {
+      question: 'Are my files stored permanently?',
+      answer:
+        'No. Files are processed for the task and are not intended for permanent storage on the platform.',
+    },
+    {
+      question: 'Which tasks can I complete on MyToolsHub?',
+      answer:
+        'You can compress files, convert documents, merge PDFs, generate QR codes, format JSON, and use many other utility tools.',
+    },
+  ];
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
 
   return (
     <main className="bg-slate-50 font-sans text-slate-900">
@@ -433,7 +505,67 @@ export default function Home() {
               </div>
             </div>
           </div>
+
+          <div className="border-t border-slate-200/80 px-6 py-8 lg:px-10 lg:py-10">
+            <div className="mb-6 flex flex-col gap-2">
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-blue-600">
+                Guides & Ideas
+              </p>
+              <h3 className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+                Explore practical ways to use ToolsHub
+              </h3>
+              <p className="max-w-3xl text-sm leading-7 text-slate-600">
+                These quick guide cards highlight useful workflows across compression, conversion,
+                editing, and downloading tasks.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              {aboutBlogs.map((blog) => (
+                <article
+                  key={blog.title}
+                  className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                    <Image
+                      src={blog.image}
+                      alt={blog.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                    />
+                  </div>
+
+                  <div className="flex min-h-[250px] flex-col p-6">
+                    <h4 className="text-[1.75rem] font-bold leading-tight tracking-tight text-slate-900">
+                      {blog.title}
+                    </h4>
+                    <p className="mt-4 flex-1 text-sm leading-7 text-slate-600">{blog.excerpt}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm lg:p-10">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">FAQs</p>
+          <h2 className="mt-2 text-3xl font-bold text-slate-900">Frequently Asked Questions</h2>
+          <div className="mt-6 grid gap-4">
+            {faqItems.map((item) => (
+              <article key={item.question} className="rounded-2xl border border-slate-200 p-5">
+                <h3 className="text-base font-semibold text-slate-900">{item.question}</h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600">{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
       </section>
 
       <footer className="border-t border-slate-200 bg-white py-8" />
