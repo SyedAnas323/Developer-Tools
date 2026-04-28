@@ -44,6 +44,15 @@ function buildDownloadUrl(item, title, mode = 'fetch') {
   return `/api/youtube-downloader/file?${params.toString()}`;
 }
 
+function DownloadIcon({ className = 'h-4 w-4' }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+    </svg>
+  );
+}
+
 async function saveResponseAsDownload(response, fallbackName) {
   const blob = await response.blob();
   const objectUrl = URL.createObjectURL(blob);
@@ -78,6 +87,40 @@ export default function YoutubeDownloaderPage() {
     () => (result?.medias || []).filter((item) => item.type === 'audio'),
     [result]
   );
+
+  function DownloadCard({ item, title, detailLine, subLine }) {
+    const isDownloading = downloadingId === item.id;
+
+    return (
+      <button
+        key={item.id}
+        type="button"
+        onClick={() => handleDownload(item, title)}
+        className="group rounded-2xl border border-slate-200 bg-white p-4 text-left transition hover:border-blue-400 hover:bg-blue-50"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <div className="text-sm font-semibold text-slate-900">{item.quality}</div>
+            <div className="mt-1 text-xs text-slate-600">{detailLine}</div>
+            {subLine ? <div className="mt-1 text-xs text-slate-500">{subLine}</div> : null}
+          </div>
+          <span className="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-300 text-slate-500 group-hover:border-blue-400 group-hover:text-blue-600">
+            {isDownloading ? (
+              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" className="opacity-25" stroke="currentColor" strokeWidth="3" />
+                <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z" />
+              </svg>
+            ) : (
+              <DownloadIcon />
+            )}
+          </span>
+        </div>
+        <div className="mt-3 text-xs font-medium text-blue-600">
+          {isDownloading ? 'Downloading...' : 'Click to download'}
+        </div>
+      </button>
+    );
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -198,7 +241,92 @@ export default function YoutubeDownloaderPage() {
           )}
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
+        {result && (
+          <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+            <div className="mx-auto max-w-3xl">
+              <div className="mx-auto w-full max-w-[320px] overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+                {result.thumbnail ? (
+                  <img
+                    src={result.thumbnail}
+                    alt={result.title}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full min-h-[220px] items-center justify-center text-sm text-slate-500">
+                    No thumbnail
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-5 text-center">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
+                  {result.source || 'youtube'}
+                </p>
+                <h2 className="mt-2 text-xl font-bold text-slate-900 sm:text-2xl">{result.title}</h2>
+                <div className="mt-4 flex flex-wrap justify-center gap-3 text-sm text-slate-600">
+                  <span className="rounded-full bg-slate-100 px-3 py-1">
+                    Author: {result.author || 'Unknown'}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1">
+                    Duration: {formatDuration(result.duration)}
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-3 py-1">
+                    Type: {result.type || 'single'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-8 space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">Video Downloads</h3>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {videoMedias.length > 0 ? (
+                      videoMedias.map((item) => (
+                        <DownloadCard
+                          key={item.id}
+                          item={item}
+                          title={result.title}
+                          detailLine={`${item.extension?.toUpperCase() || 'FILE'} - ${formatBytes(item.dataSize)}`}
+                          subLine={item.width && item.height
+                            ? `${item.width} x ${item.height}`
+                            : 'Resolution not provided'}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-sm text-slate-500">No video links found.</p>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-900">Audio Downloads</h3>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    {audioMedias.length > 0 ? (
+                      audioMedias.map((item) => (
+                        <DownloadCard
+                          key={item.id}
+                          item={item}
+                          title={result.title}
+                          detailLine={`${item.extension?.toUpperCase() || 'FILE'} - ${formatDuration(item.duration)}`}
+                        />
+                      ))
+                    ) : (
+                      <p className="text-sm text-slate-500">No audio links found.</p>
+                    )}
+                  </div>
+                </div>
+
+                {result.message && (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    {result.message}
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
           <section className="space-y-6">
             <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
               <h2 className="text-xl font-semibold text-slate-900">How To Use This Tool</h2>
@@ -244,109 +372,6 @@ export default function YoutubeDownloaderPage() {
             </div>
           </aside>
         </div>
-
-        {result && (
-          <section className="mt-8 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
-            <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
-              <div className="overflow-hidden rounded-2xl bg-slate-100">
-                {result.thumbnail ? (
-                  <img
-                    src={result.thumbnail}
-                    alt={result.title}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full min-h-[220px] items-center justify-center text-sm text-slate-500">
-                    No thumbnail
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-600">
-                  {result.source || 'youtube'}
-                </p>
-                <h2 className="mt-2 text-2xl font-bold text-slate-900">{result.title}</h2>
-                <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-600">
-                  <span className="rounded-full bg-slate-100 px-3 py-1">
-                    Author: {result.author || 'Unknown'}
-                  </span>
-                  <span className="rounded-full bg-slate-100 px-3 py-1">
-                    Duration: {formatDuration(result.duration)}
-                  </span>
-                  <span className="rounded-full bg-slate-100 px-3 py-1">
-                    Type: {result.type || 'single'}
-                  </span>
-                </div>
-
-                <div className="mt-6 space-y-6">
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-900">Video Downloads</h3>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      {videoMedias.length > 0 ? (
-                        videoMedias.map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => handleDownload(item, result.title)}
-                            className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-blue-400 hover:bg-blue-50"
-                          >
-                            <div className="text-sm font-semibold text-slate-900">{item.quality}</div>
-                            <div className="mt-1 text-xs text-slate-600">
-                              {item.extension?.toUpperCase() || 'FILE'} - {formatBytes(item.dataSize)}
-                            </div>
-                            <div className="mt-1 text-xs text-slate-500">
-                              {item.width && item.height
-                                ? `${item.width} x ${item.height}`
-                                : 'Resolution not provided'}
-                            </div>
-                            <div className="mt-3 text-xs text-slate-500">
-                              {downloadingId === item.id ? 'Downloading...' : 'Click to download'}
-                            </div>
-                          </button>
-                        ))
-                      ) : (
-                        <p className="text-sm text-slate-500">No video links found.</p>
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-900">Audio Downloads</h3>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                      {audioMedias.length > 0 ? (
-                        audioMedias.map((item) => (
-                          <button
-                            key={item.id}
-                            type="button"
-                            onClick={() => handleDownload(item, result.title)}
-                            className="rounded-2xl border border-slate-200 p-4 text-left transition hover:border-blue-400 hover:bg-blue-50"
-                          >
-                            <div className="text-sm font-semibold text-slate-900">{item.quality}</div>
-                            <div className="mt-1 text-xs text-slate-600">
-                              {item.extension?.toUpperCase() || 'FILE'} - {formatDuration(item.duration)}
-                            </div>
-                            <div className="mt-3 text-xs text-slate-500">
-                              {downloadingId === item.id ? 'Downloading...' : 'Click to download'}
-                            </div>
-                          </button>
-                        ))
-                      ) : (
-                        <p className="text-sm text-slate-500">No audio links found.</p>
-                      )}
-                    </div>
-                  </div>
-
-                  {result.message && (
-                    <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                      {result.message}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
       </div>
     </main>
   );
