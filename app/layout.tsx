@@ -286,7 +286,7 @@ export const metadata: Metadata = {
   keywords: ["online tools", "developer tools", "image compressor", "json formatter", "web tools"],
   authors: [{ name: "Syed Anas" }],
   verification: {
-    google: "4razs74pssDhzsttCA0hcOcB5iq38aGRqoHWz3UxHpE",
+    google: "yzFaNrWBAf83L5ju2bjA75WjgzOpUfQZQFa1GLfGixo",
   },
   openGraph: {
     type: "website",
