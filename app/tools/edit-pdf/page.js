@@ -574,7 +574,9 @@ export default function EditPdfPage() {
       setDownloadUrl(nextUrl);
     } catch (err) {
       console.error(err);
-      setError(err.message || 'PDF export nahin hui. Dobara try karein.');
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     } finally {
       setExporting(false);
     }

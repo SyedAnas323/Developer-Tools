@@ -206,7 +206,7 @@ export default function BackgroundRemover() {
       });
 
       if (!response.ok) {
-        throw new Error('API failed. Check API Key in route.js file.');
+        throw new Error('Something went wrong. Please try again.');
       }
 
       const blob = await response.blob();
@@ -215,7 +215,9 @@ export default function BackgroundRemover() {
 
     } catch (err) {
       console.error(err);
-      setError('Failed. Make sure API Key is correct in app/api/removebg/route.js file.');
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     }
     setLoading(false);
   };

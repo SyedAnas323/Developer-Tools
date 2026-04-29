@@ -215,7 +215,7 @@ export async function POST(request) {
     console.error('Edit PDF export error:', error);
 
     return NextResponse.json(
-      { error: error.message || 'Failed to export PDF.' },
+      { error: 'Something went wrong. Please try again.' },
       { status: 500 }
     );
   }

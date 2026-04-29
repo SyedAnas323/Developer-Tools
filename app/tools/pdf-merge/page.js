@@ -56,7 +56,9 @@ export default function PdfMergeTool() {
       const blob = await response.blob();
       setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
-      setError(err.message || 'PDF merge failed.');
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     } finally {
       setLoading(false);
     }

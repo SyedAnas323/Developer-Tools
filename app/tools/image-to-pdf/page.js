@@ -67,7 +67,9 @@ export default function ImageToPdf() {
       const blob = await response.blob();
       setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
-      setError(err.message || 'Image to PDF conversion failed.');
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     } finally {
       setLoading(false);
     }

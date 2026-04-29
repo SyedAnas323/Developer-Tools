@@ -90,7 +90,7 @@ export default function PdfCompressor() {
       });
     } catch (err) {
       console.error(err);
-      alert('Error compressing PDF. Please try another file.');
+      alert('Something went wrong. Please try again.');
     }
     setLoading(false);
   };

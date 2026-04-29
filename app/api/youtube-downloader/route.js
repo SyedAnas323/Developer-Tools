@@ -35,8 +35,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           error: true,
-          message:
-            'Missing RapidAPI server key. Add RAPID_API_KEY in local .env.local and also in Vercel Project Settings > Environment Variables.',
+          message: 'Something went wrong. Please try again.',
         },
         { status: 500 }
       );
@@ -99,10 +98,7 @@ export async function POST(request) {
       return NextResponse.json(
         {
           error: true,
-          message:
-            upstreamData?.message ||
-            upstreamData?.error ||
-            `RapidAPI request failed with status ${upstreamResponse.status}.`,
+          message: 'Something went wrong. Please try again.',
         },
         { status: upstreamResponse.status }
       );
@@ -133,7 +129,7 @@ export async function POST(request) {
     return NextResponse.json(
       {
         error: true,
-        message: error.message || 'Something went wrong while fetching video data.',
+        message: 'Something went wrong. Please try again.',
       },
       { status: 500 }
     );

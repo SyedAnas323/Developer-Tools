@@ -39,7 +39,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('Image to PDF error:', error);
     return NextResponse.json(
-      { error: error.message || 'Image to PDF conversion failed.' },
+      { error: 'Something went wrong. Please try again.' },
       { status: 500 }
     );
   }

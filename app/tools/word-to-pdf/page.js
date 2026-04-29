@@ -62,7 +62,9 @@ export default function WordToPdfConverter() {
       const blob = await response.blob();
       setDownloadUrl(URL.createObjectURL(blob));
     } catch (err) {
-      setError(err.message);
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     } finally {
       setLoading(false);
     }

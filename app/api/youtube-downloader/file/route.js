@@ -93,8 +93,7 @@ export async function GET(request) {
       return NextResponse.json(
         {
           error: true,
-          message:
-            'Direct download blocked by source',
+          message: 'Something went wrong. Please try again.',
         },
         { status: 409 }
       );
@@ -104,7 +103,7 @@ export async function GET(request) {
       return NextResponse.json(
         {
           error: true,
-          message: `Unable to download file. Source responded with ${upstreamResponse.status}.`,
+          message: 'Something went wrong. Please try again.',
         },
         { status: 502 }
       );
@@ -133,7 +132,7 @@ export async function GET(request) {
     });
   } catch (error) {
     return NextResponse.json(
-      { error: true, message: error.message || 'Failed to proxy download.' },
+      { error: true, message: 'Something went wrong. Please try again.' },
       { status: 500 }
     );
   }

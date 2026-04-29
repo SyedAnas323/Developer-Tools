@@ -34,7 +34,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('PDF merge error:', error);
     return NextResponse.json(
-      { error: error.message || 'PDF merge failed.' },
+      { error: 'Something went wrong. Please try again.' },
       { status: 500 }
     );
   }

@@ -145,7 +145,9 @@ export default function YoutubeDownloaderPage() {
 
       setResult(data);
     } catch (fetchError) {
-      setError(fetchError.message || 'Request failed.');
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     } finally {
       setLoading(false);
     }
@@ -163,19 +165,14 @@ export default function YoutubeDownloaderPage() {
       const response = await fetch(downloadUrl);
 
       if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        if (response.status === 409 && data?.message === 'Direct download blocked by source') {
-          throw new Error(
-            'This video host is blocking live server downloads on Vercel. The file link can be detected, but the source server is refusing a reliable forced download.'
-          );
-        }
-
-        throw new Error(data?.message || 'Download failed.');
+        throw new Error('Something went wrong. Please try again.');
       }
 
       await saveResponseAsDownload(response, fallbackName);
     } catch (downloadError) {
-      setError(downloadError.message || 'Download failed.');
+      const message = 'Something went wrong. Please try again.';
+      setError(message);
+      alert(message);
     } finally {
       setDownloadingId('');
     }

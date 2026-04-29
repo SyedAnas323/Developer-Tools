@@ -16,7 +16,7 @@ export function getILovePdfKeys() {
   const secretKey = process.env.ILOVEPDF_SECRET_KEY?.trim();
 
   if (!publicKey || !secretKey) {
-    throw new Error('ILOVEPDF_PUBLIC_KEY or ILOVEPDF_SECRET_KEY is missing in .env.local');
+    throw new Error('Service is temporarily unavailable. Please try again.');
   }
 
   return { publicKey, secretKey };

@@ -385,7 +385,7 @@ async function convertWordToPdfWithILovePDF(file, publicKey) {
   const secretKey = process.env.ILOVEPDF_SECRET_KEY?.trim();
 
   if (!secretKey) {
-    throw new Error('ILOVEPDF_SECRET_KEY is missing in .env.local');
+    throw new Error('Service is temporarily unavailable. Please try again.');
   }
 
   const ILovePDFApi = require('@ilovepdf/ilovepdf-nodejs');
@@ -408,7 +408,7 @@ async function convertWordToPdfWithILovePDF(file, publicKey) {
     const output = await task.download();
     return Buffer.from(output);
   } catch (error) {
-    throw new Error(error?.message || 'Word to PDF conversion failed');
+    throw new Error('Something went wrong. Please try again.');
   } finally {
     await fs.rm(tempDir, { recursive: true, force: true });
   }
@@ -443,7 +443,7 @@ export async function POST(request) {
 
     if (!publicKey) {
       return NextResponse.json(
-        { error: 'ILOVEPDF_PUBLIC_KEY is missing in .env.local' },
+        { error: 'Something went wrong. Please try again.' },
         { status: 500 }
       );
     }
@@ -460,7 +460,7 @@ export async function POST(request) {
     console.error('Conversion error:', error);
 
     return NextResponse.json(
-      { error: error.message || 'Conversion failed' },
+      { error: 'Something went wrong. Please try again.' },
       { status: 500 }
     );
   }
