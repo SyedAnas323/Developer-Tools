@@ -8,6 +8,27 @@ export const metadata = {
 
 const posts = [
   {
+    slug: "how-to-resize-image-online",
+    title: "How to Resize Image Online for Free — No Signup",
+    excerpt:
+      "A complete walkthrough to resize images for social, web, and forms while preserving visual quality.",
+    readTime: "8 min read",
+  },
+  {
+    slug: "how-to-count-words-online",
+    title: "Free Online Word Counter — Count Words and Characters",
+    excerpt:
+      "Learn how to track word and character counts accurately for assignments, SEO, and social content.",
+    readTime: "8 min read",
+  },
+  {
+    slug: "strong-password-generator-guide",
+    title: "How to Generate a Strong Password Online for Free",
+    excerpt:
+      "Build stronger account security with a practical password generation workflow and simple best practices.",
+    readTime: "8 min read",
+  },
+  {
     slug: "how-to-compress-pdf-free",
     title: "How to Compress PDF Files Online for Free (No Signup)",
     excerpt:
