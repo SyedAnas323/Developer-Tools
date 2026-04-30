@@ -29,11 +29,6 @@ export const TOOL_FAQS = {
     ['Can I minify JSON as well?', 'Yes. You can beautify for readability or minify for compact output.'],
     ['Is my JSON data stored?', 'No account is required, and formatting is handled directly in the tool interface.'],
   ],
-  'logo-remover': [
-    ['Can I remove logos from images online?', 'Yes. The tool helps clean logos or marks from selected image areas.'],
-    ['Is this tool free to use?', 'Yes. You can use it online for free without signup.'],
-    ['What output format will I get?', 'You can download the processed image after cleanup is completed.'],
-  ],
   'password-generator': [
     ['Does this generator create strong passwords?', 'Yes. It creates random passwords with letters, numbers, and symbols.'],
     ['Can I control password length?', 'Yes. You can choose your preferred password length before generating.'],

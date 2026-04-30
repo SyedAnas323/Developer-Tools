@@ -10,7 +10,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'image-resizer',
     'image-to-pdf',
     'json-formatter',
-    'logo-remover',
     'password-generator',
     'pdf-compressor',
     'pdf-merge',

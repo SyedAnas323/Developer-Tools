@@ -80,12 +80,6 @@ export default function Home() {
       icon: '✂️',
     },
     {
-      name: 'Logo Remover',
-      path: '/tools/logo-remover',
-      desc: 'Erase logos and watermarks from images instantly.',
-      icon: '🎨',
-    },
-    {
       name: 'Word to PDF',
       path: '/tools/word-to-pdf',
       desc: 'Convert Word documents to PDF files.',

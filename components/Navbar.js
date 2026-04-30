@@ -14,7 +14,6 @@ const tools = [
   { name: 'Word Counter', path: '/tools/word-counter' },
   { name: 'Image Resizer', path: '/tools/image-resizer' },
   { name: 'Background Remover', path: '/tools/background-remover' },
-  { name: 'Logo Remover', path: '/tools/logo-remover' },
   { name: 'Word to PDF', path: '/tools/word-to-pdf' },
   { name: 'Edit PDF', path: '/tools/edit-pdf' },
   { name: 'PDF Merge', path: '/tools/pdf-merge' },

@@ -75,20 +75,6 @@ const TOOL_CONTENT = {
       'Useful for developers working with APIs and config files.',
     ],
   },
-  'logo-remover': {
-    title: 'Logo Remover',
-    steps: [
-      'Upload the image you want to clean.',
-      'Use the tool controls to remove unwanted logo or watermark areas.',
-      'Review the result before saving the cleaned image.',
-    ],
-    advantages: [
-      'Helps clean images without opening heavy editing software.',
-      'Useful for simple object and watermark cleanup tasks.',
-      'Keeps the workflow focused and easy to follow.',
-    ],
-    download: 'Use the final save or download option after the cleaned image is ready.',
-  },
   'password-generator': {
     title: 'Password Generator',
     steps: [
