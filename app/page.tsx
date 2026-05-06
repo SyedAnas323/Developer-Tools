@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -74,10 +74,28 @@ export default function Home() {
       icon: '↔️',
     },
     {
+      name: 'Image Format Converter',
+      path: '/tools/image-format-converter',
+      desc: 'Convert images between PNG, JPG, WebP, and AVIF formats.',
+      icon: '🔄',
+    },
+    {
+      name: 'Image Cropper',
+      path: '/tools/image-cropper',
+      desc: 'Crop images with drag handles, aspect ratio presets, and live preview.',
+      icon: '✂️',
+    },
+    {
+      name: 'Favicon Generator',
+      path: '/tools/favicon-generator',
+      desc: 'Generate favicon.ico, PNG sizes, and web manifest in one ZIP package.',
+      icon: '⭐',
+    },
+    {
       name: 'Background Remover',
       path: '/tools/background-remover',
       desc: 'Remove background from images automatically using AI.',
-      icon: '✂️',
+      icon: '🧼',
     },
     {
       name: 'Word to PDF',

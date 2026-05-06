@@ -6,7 +6,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const tools = [
     'background-remover',
     'edit-pdf',
+    'favicon-generator',
     'image-compressor',
+    'image-format-converter',
+    'image-cropper',
     'image-resizer',
     'image-to-pdf',
     'json-formatter',

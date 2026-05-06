@@ -279,7 +279,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://toolshub.cyphersol.com"),
   title: {
     default: "MyToolsHub - Free Online Developer Tools",
-    template: "%s | MyToolsHub",
+    template: "%s",
   },
   description:
     "Free online tools for developers and designers. Compress images, format JSON, generate QR codes, and more. Fast and secure.",

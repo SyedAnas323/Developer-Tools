@@ -20,6 +20,21 @@ const TOOL_CONTENT = {
     download: 'When processing finishes, click the download button to save the PNG file.',
   },
   'edit-pdf': null,
+  'favicon-generator': {
+    title: 'Favicon Generator',
+    steps: [
+      'Upload image by drag-and-drop or click upload.',
+      'Preview all standard favicon sizes before export.',
+      'Set background, padding, and shape options.',
+      'Generate package and download all icons in one ZIP file.',
+    ],
+    advantages: [
+      'Creates complete favicon bundle for website and PWA usage.',
+      'Saves time with multiple size generation in one click.',
+      'Includes HTML snippet and manifest-ready icon files.',
+    ],
+    download: 'Click generate favicon package to download favicon.ico, PNG sizes, and site.webmanifest in one ZIP.',
+  },
   'image-compressor': {
     title: 'Image Compressor',
     steps: [
@@ -47,6 +62,36 @@ const TOOL_CONTENT = {
       'Makes it easy to download the final resized image.',
     ],
     download: 'After resizing, click the download button to save the new image.',
+  },
+  'image-format-converter': {
+    title: 'Image Format Converter',
+    steps: [
+      'Upload an image by click or drag-and-drop.',
+      'Preview the uploaded image to confirm it is correct.',
+      'Select output format from PNG, JPG, WebP, or AVIF.',
+      'Click convert and download the output instantly.',
+    ],
+    advantages: [
+      'Converts common image formats from one simple page.',
+      'Keeps workflow fast with instant browser-based processing.',
+      'Useful for web optimization, social uploads, and compatibility.',
+    ],
+    download: 'After conversion, click the download button to save your file in the selected format.',
+  },
+  'image-cropper': {
+    title: 'Image Cropper',
+    steps: [
+      'Upload image by click or drag-and-drop.',
+      'Draw crop area and resize using handles from corners and edges.',
+      'Use aspect ratio presets or manual width/height for exact crop.',
+      'Preview live result and click crop and download instantly.',
+    ],
+    advantages: [
+      'Gives precise crop control with visual handles and dimmed background.',
+      'Supports rotate and flip for quick image adjustments before export.',
+      'Runs directly in browser with instant output in multiple formats.',
+    ],
+    download: 'Select output format (PNG, JPG, or WebP) and use crop and download to save the result.',
   },
   'image-to-pdf': {
     title: 'Image To PDF',

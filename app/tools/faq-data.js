@@ -9,6 +9,11 @@ export const TOOL_FAQS = {
     ['Do I need to create an account?', 'No. You can use the tool without signup for normal editing workflows.'],
     ['Will my edited PDF be downloadable?', 'Yes. After editing, you can download the updated PDF file directly.'],
   ],
+  'favicon-generator': [
+    ['Which formats can I upload for favicon generation?', 'You can upload JPG, PNG, WebP, and SVG images.'],
+    ['Does the tool generate all standard favicon sizes?', 'Yes. It generates common favicon, Apple touch, and Android/PWA icon sizes.'],
+    ['Can I download everything in one file?', 'Yes. The tool packages all generated files into one ZIP for quick download.'],
+  ],
   'image-compressor': [
     ['How much can I reduce image size?', 'Compression savings depend on image type, but many files can be reduced significantly.'],
     ['Does compression reduce quality?', 'The tool is optimized to shrink file size while keeping visual quality usable.'],
@@ -18,6 +23,16 @@ export const TOOL_FAQS = {
     ['Can I resize images to exact pixels?', 'Yes. You can set custom width and height values in pixels.'],
     ['Will aspect ratio be maintained?', 'You can keep the aspect ratio to avoid stretched or distorted images.'],
     ['Which file types can I resize?', 'Most common image types such as JPG and PNG are supported.'],
+  ],
+  'image-format-converter': [
+    ['Which formats can I convert?', 'You can convert images between PNG, JPG, WebP, and AVIF.'],
+    ['Do I need to install software?', 'No. The converter works directly in your browser.'],
+    ['Can I preview before downloading?', 'Yes. You can see the uploaded image preview before converting.'],
+  ],
+  'image-cropper': [
+    ['Which image types can I crop?', 'You can upload and crop JPG, PNG, WebP, and AVIF images.'],
+    ['Can I set fixed aspect ratios?', 'Yes. Presets like 1:1, 4:3, 16:9, 3:2, and 9:16 are available.'],
+    ['Does this tool support instant download?', 'Yes. After selecting area, click crop and download in PNG, JPG, or WebP.'],
   ],
   'image-to-pdf': [
     ['Can I convert multiple images into one PDF?', 'Yes. Upload multiple images and combine them into a single PDF file.'],

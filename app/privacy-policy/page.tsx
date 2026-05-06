@@ -5,7 +5,8 @@ export const metadata = {
 
 export default function PrivacyPolicy() {
   return (
-    <main style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px', lineHeight: '1.8' }}>
+    <main style={{ minHeight: '100vh', background: '#ffffff', color: '#0f172a' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '40px 20px', lineHeight: '1.8' }}>
       <h1>Privacy Policy</h1>
       <p><strong>Last updated:</strong> April 2026</p>
       <p>MyToolsHub ("we", "us") operates toolshub.cyphersol.com. This page explains how we handle your data.</p>
@@ -30,6 +31,7 @@ export default function PrivacyPolicy() {
 
       <h2>7. Contact Us</h2>
       <p>Questions? Email us at: contact@cyphersol.com</p>
+      </div>
     </main>
   )
 }
