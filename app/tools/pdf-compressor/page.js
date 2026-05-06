@@ -57,7 +57,6 @@
 'use client';
 
 import { useState } from 'react';
-import { PDFDocument } from 'pdf-lib';
 
 export default function PdfCompressor() {
   const [pdfInfo, setPdfInfo] = useState(null);
@@ -73,19 +72,25 @@ export default function PdfCompressor() {
     setPdfInfo(null);
 
     try {
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+      const formData = new FormData();
+      formData.append('file', file);
 
-      // Compression Logic
-      const compressedBytes = await pdfDoc.save({ useObjectStreams: true });
+      const response = await fetch('/api/pdf-compressor', {
+        method: 'POST',
+        body: formData,
+      });
 
-      const blob = new Blob([compressedBytes], { type: 'application/pdf' });
+      if (!response.ok) {
+        throw new Error('Something went wrong. Please try again.');
+      }
+
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
 
       setPdfInfo({
         name: file.name,
         originalSize: (file.size / 1024 / 1024).toFixed(2),
-        newSize: (compressedBytes.byteLength / 1024 / 1024).toFixed(2),
+        newSize: (blob.size / 1024 / 1024).toFixed(2),
         downloadUrl: url
       });
     } catch (err) {
