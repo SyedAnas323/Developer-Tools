@@ -278,11 +278,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://toolshub.cyphersol.com"),
   title: {
-    default: "MyToolsHub - Free Online Developer Tools",
+    default: "MyToolsHub - Free Online Tools for PDF, Image, and Daily Tasks",
     template: "%s",
   },
   description:
-    "Free online tools for developers and designers. Compress images, format JSON, generate QR codes, and more. Fast and secure.",
+    "Use free online tools to compress PDF, merge files, resize images, convert formats, generate QR codes, and complete daily tasks quickly. No signup required.",
   keywords: ["online tools", "developer tools", "image compressor", "json formatter", "web tools"],
   authors: [{ name: "Syed Anas" }],
   verification: {
@@ -293,13 +293,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://toolshub.cyphersol.com",
     siteName: "MyToolsHub",
-    title: "MyToolsHub - Free Online Tools",
-    description: "Collection of free tools for daily tasks.",
+    title: "MyToolsHub - Free Online PDF, Image, and Utility Tools",
+    description: "Free tools for PDF, image, and productivity tasks with fast, browser-based workflows.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MyToolsHub",
-    description: "Free online tools for developers.",
+    title: "MyToolsHub - Free Online Tools",
+    description: "Compress, convert, and optimize files online for free. Fast and easy tools for daily use.",
   },
   robots: {
     index: true,

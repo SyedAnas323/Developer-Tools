@@ -1,8 +1,10 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { TOOL_FAQS } from './faq-data';
+import { ToolWebApplicationSchema } from './metadata';
 
 const TOOL_CONTENT = {
   'background-remover': {
@@ -226,6 +228,37 @@ type ToolContent = {
   download?: string;
 } | null;
 
+const RELATED_LINKS: Record<string, Array<{ href: string; anchor: string }>> = {
+  'image-compressor': [
+    { href: '/tools/image-resizer', anchor: 'resize image online free' },
+    { href: '/tools/image-format-converter', anchor: 'convert image format online' },
+  ],
+  'pdf-compressor': [
+    { href: '/tools/image-compressor', anchor: 'compress images online free' },
+    { href: '/tools/pdf-merge', anchor: 'merge pdf files online free' },
+  ],
+  'image-resizer': [
+    { href: '/tools/image-compressor', anchor: 'compress image online' },
+    { href: '/tools/image-cropper', anchor: 'crop image online free' },
+  ],
+  'image-format-converter': [
+    { href: '/tools/image-compressor', anchor: 'reduce image file size online' },
+    { href: '/tools/image-resizer', anchor: 'resize image dimensions in pixels' },
+  ],
+  'favicon-generator': [
+    { href: '/tools/image-format-converter', anchor: 'convert png to ico-friendly format' },
+    { href: '/tools/background-remover', anchor: 'remove image background online' },
+  ],
+  'background-remover': [
+    { href: '/tools/image-compressor', anchor: 'compress photos online free' },
+    { href: '/tools/favicon-generator', anchor: 'generate favicon online free' },
+  ],
+  'pdf-merge': [
+    { href: '/tools/pdf-compressor', anchor: 'compress pdf online free' },
+    { href: '/tools/word-to-pdf', anchor: 'convert word to pdf online' },
+  ],
+};
+
 function ToolInfoSection({ content }: { content: ToolContent }) {
   if (!content) {
     return null;
@@ -286,6 +319,33 @@ function ToolFaqSection({ slug }: { slug: string }) {
   );
 }
 
+function RelatedToolsSection({ slug }: { slug: string }) {
+  const links = RELATED_LINKS[slug] || [];
+  if (!links.length) return null;
+
+  return (
+    <section className="mx-auto mt-4 max-w-6xl px-4 pb-12">
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-slate-900">Related Tools</h2>
+        <p className="mt-2 text-sm text-slate-600">
+          Explore related workflows to complete your task faster.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {links.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-blue-300 hover:text-blue-700"
+            >
+              {item.anchor}
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function ToolsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const slug = pathname.split('/').filter(Boolean).at(-1) || '';
@@ -295,7 +355,15 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-white text-slate-900">
       <Navbar />
       {children}
+      {content ? (
+        <ToolWebApplicationSchema
+          slug={slug}
+          name={`${content.title} | MyToolsHub`}
+          description={`Use ${content.title} online for free on MyToolsHub. Fast, browser-based workflow with instant results.`}
+        />
+      ) : null}
       <ToolInfoSection content={content} />
+      <RelatedToolsSection slug={slug} />
       <ToolFaqSection slug={slug} />
     </div>
   );

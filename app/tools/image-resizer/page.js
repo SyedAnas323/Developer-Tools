@@ -65,7 +65,7 @@ export default function ImageResizer() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-white mb-1">Image Resizer</h1>
+          <h1 className="text-3xl font-bold text-white mb-1">Resize Image Online Free</h1>
           <p className="text-purple-100 text-sm">Resize your photos to exact dimensions instantly</p>
         </div>
 

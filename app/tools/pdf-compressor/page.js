@@ -115,7 +115,7 @@ export default function PdfCompressor() {
               <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clipRule="evenodd" />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">PDF Compressor</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Compress PDF Online Free</h1>
           <p className="text-gray-500">Reduce file size while keeping quality intact.</p>
         </div>
 

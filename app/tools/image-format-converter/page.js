@@ -111,7 +111,7 @@ export default function ImageFormatConverterPage() {
             Image Format Converter
           </p>
           <h1 className="mt-3 text-3xl font-bold text-slate-900">
-            Convert PNG, JPG, WebP, and AVIF instantly
+            Image Format Converter Online Free (PNG, JPG, WebP, AVIF)
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Upload an image, preview it, select output format, and download your converted file in one click.
@@ -208,4 +208,3 @@ export default function ImageFormatConverterPage() {
     </main>
   );
 }
-

@@ -67,3 +67,31 @@ export function ToolFaqSchema({ slug }) {
     />
   );
 }
+
+export function ToolWebApplicationSchema({ slug, name, description }) {
+  if (!slug || !name) return null;
+  const url = `${BASE_URL}/tools/${slug}`;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name,
+    url,
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Any',
+    browserRequirements: 'Requires JavaScript. Works in modern web browsers.',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    description: description || `${name} by MyToolsHub`,
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}

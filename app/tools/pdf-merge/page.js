@@ -72,7 +72,7 @@ export default function PdfMergeTool() {
             PDF Merge
           </p>
           <h1 className="mt-3 text-3xl font-bold text-slate-900">
-            Merge multiple PDF files into one final document
+            Merge PDF Files Online Free in Seconds
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Upload at least two PDF files, keep them in the selected order, and combine them into

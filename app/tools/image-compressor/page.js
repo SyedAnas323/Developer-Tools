@@ -38,7 +38,7 @@ export default function ImageCompressor() {
             Image Compressor
           </p>
           <h1 className="mt-3 text-3xl font-bold text-slate-900">
-            Compress images with a cleaner, faster workflow
+            Compress Images Online Free Without Losing Quality
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Upload an image, let the tool reduce the file size, then review the result and download
