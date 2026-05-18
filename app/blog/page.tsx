@@ -8,6 +8,41 @@ export const metadata = {
 
 const posts = [
   {
+    slug: "how-to-remove-background-from-image",
+    title: "How to Remove Background from Image Online for Free",
+    excerpt:
+      "Cleanly remove image backgrounds for ecommerce, design, and social media using a fast browser-based workflow.",
+    readTime: "7 min read",
+  },
+  {
+    slug: "how-to-edit-pdf-online-free",
+    title: "How to Edit PDF Online Free (Add Text Fast)",
+    excerpt:
+      "A practical method to add text and make quick PDF edits online without heavy desktop software.",
+    readTime: "7 min read",
+  },
+  {
+    slug: "how-to-generate-favicon-online",
+    title: "How to Generate Favicon Online Free (Full Pack)",
+    excerpt:
+      "Create favicon.ico, Apple touch icon, Android icons, and manifest files in one downloadable package.",
+    readTime: "6 min read",
+  },
+  {
+    slug: "how-to-compress-images-online-free",
+    title: "How to Compress Images Online Free for Web and Social",
+    excerpt:
+      "Reduce image file size for faster websites and quick sharing while keeping quality suitable for real use.",
+    readTime: "6 min read",
+  },
+  {
+    slug: "how-to-crop-image-online-free",
+    title: "How to Crop Image Online Free with Exact Dimensions",
+    excerpt:
+      "Use ratio presets, manual dimensions, and live preview to crop images accurately in your browser.",
+    readTime: "6 min read",
+  },
+  {
     slug: "how-to-resize-image-online",
     title: "How to Resize Image Online for Free — No Signup",
     excerpt:
