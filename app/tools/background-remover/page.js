@@ -234,7 +234,7 @@ export default function BackgroundRemover() {
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-white mb-1">AI Background Remover</h1>
-          <p className="text-purple-100 text-sm">Powered by Remove.bg API</p>
+          <p className="text-purple-100 text-sm">Turn any photo into a clean transparent image in seconds.</p>
         </div>
 
         <div className="p-8">
@@ -267,7 +267,7 @@ export default function BackgroundRemover() {
                 <div className="absolute top-0 left-0 w-full h-full border-4 border-purple-600 rounded-full animate-spin border-t-transparent"></div>
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">AI Processing...</h3>
-              <p className="text-gray-500 text-sm">Contacting API, please wait...</p>
+              <p className="text-gray-500 text-sm">Background Removing...</p>
             </div>
           )}
 

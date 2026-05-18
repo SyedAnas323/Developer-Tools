@@ -177,29 +177,31 @@ export default function FaviconGeneratorPage() {
         <h1 className="mt-2 text-3xl font-bold text-slate-900">Create complete favicon pack instantly</h1>
         <p className="mt-2 text-sm text-slate-600">Upload once, preview all standard sizes, then download full ZIP package.</p>
 
-        <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".jpg,.jpeg,.png,.webp,.svg,image/*"
-            className="hidden"
-            onChange={(e) => onSelectFile(e.target.files?.[0])}
-          />
-          <div
-            onDrop={(e) => {
-              e.preventDefault();
-              onSelectFile(e.dataTransfer.files?.[0]);
-            }}
-            onDragOver={(e) => e.preventDefault()}
-            className="rounded-2xl border-2 border-dashed border-slate-300 bg-white p-8 text-center"
-          >
-            <button type="button" onClick={() => fileRef.current?.click()} className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-              Upload Image
-            </button>
-            <p className="mt-3 text-sm text-slate-600">Drag & drop or click to upload (JPG, PNG, WebP, SVG)</p>
-            <p className="mt-1 text-xs font-medium text-amber-600">Tip: Square images work best</p>
+        {!imageEl ? (
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <input
+              ref={fileRef}
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,.svg,image/*"
+              className="hidden"
+              onChange={(e) => onSelectFile(e.target.files?.[0])}
+            />
+            <div
+              onDrop={(e) => {
+                e.preventDefault();
+                onSelectFile(e.dataTransfer.files?.[0]);
+              }}
+              onDragOver={(e) => e.preventDefault()}
+              className="rounded-2xl border-2 border-dashed border-slate-300 bg-white p-8 text-center"
+            >
+              <button type="button" onClick={() => fileRef.current?.click()} className="rounded-xl bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700">
+                Upload Image
+              </button>
+              <p className="mt-3 text-sm text-slate-600">Drag & drop or click to upload (JPG, PNG, WebP, SVG)</p>
+              <p className="mt-1 text-xs font-medium text-amber-600">Tip: Square images work best</p>
+            </div>
           </div>
-        </div>
+        ) : null}
 
         {imageEl ? (
           <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">

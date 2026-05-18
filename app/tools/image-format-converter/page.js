@@ -118,31 +118,33 @@ export default function ImageFormatConverterPage() {
           </p>
         </div>
 
-        <div
-          onDrop={onDrop}
-          onDragOver={(event) => event.preventDefault()}
-          className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6"
-        >
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            id="image-format-converter-input"
-            onChange={onInputChange}
-          />
-          <label
-            htmlFor="image-format-converter-input"
-            className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white px-6 text-center transition hover:border-blue-400 hover:bg-blue-50/30"
+        {!previewUrl ? (
+          <div
+            onDrop={onDrop}
+            onDragOver={(event) => event.preventDefault()}
+            className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6"
           >
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-              </svg>
-            </div>
-            <p className="text-lg font-semibold text-slate-900">Drag & drop image here or click to upload</p>
-            <p className="mt-2 text-sm text-slate-500">Supports PNG, JPG, WebP, AVIF, and other common image types</p>
-          </label>
-        </div>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              id="image-format-converter-input"
+              onChange={onInputChange}
+            />
+            <label
+              htmlFor="image-format-converter-input"
+              className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white px-6 text-center transition hover:border-blue-400 hover:bg-blue-50/30"
+            >
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+                <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 16V4m0 0l-4 4m4-4l4 4M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+                </svg>
+              </div>
+              <p className="text-lg font-semibold text-slate-900">Drag & drop image here or click to upload</p>
+              <p className="mt-2 text-sm text-slate-500">Supports PNG, JPG, WebP, AVIF, and other common image types</p>
+            </label>
+          </div>
+        ) : null}
 
         {previewUrl ? (
           <div className="mt-8 space-y-6">

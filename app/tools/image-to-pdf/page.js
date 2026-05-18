@@ -97,31 +97,6 @@ export default function ImageToPdf() {
           </div>
         )}
 
-        <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
-          <input
-            type="file"
-            multiple
-            accept=".jpg,.jpeg,.png,.webp,.svg,image/*"
-            onChange={handleFiles}
-            className="hidden"
-            id="image-to-pdf-input"
-          />
-          <label
-            htmlFor="image-to-pdf-input"
-            className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white px-6 text-center transition hover:border-blue-400 hover:bg-blue-50/30"
-          >
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
-              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-            </div>
-            <p className="text-lg font-semibold text-slate-900">Click to select image files</p>
-            <p className="mt-2 text-sm text-slate-500">
-              Supported formats: JPG, PNG, SVG, WEBP
-            </p>
-          </label>
-        </div>
-
         {previews.length > 0 && (
           <div className="mt-8 space-y-5">
             <div className="flex items-center justify-between">
@@ -172,6 +147,31 @@ export default function ImageToPdf() {
             )}
           </div>
         )}
+
+        <div className="mt-8 rounded-3xl border border-slate-200 bg-slate-50 p-6">
+          <input
+            type="file"
+            multiple
+            accept=".jpg,.jpeg,.png,.webp,.svg,image/*"
+            onChange={handleFiles}
+            className="hidden"
+            id="image-to-pdf-input"
+          />
+          <label
+            htmlFor="image-to-pdf-input"
+            className="flex min-h-[220px] cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-slate-300 bg-white px-6 text-center transition hover:border-blue-400 hover:bg-blue-50/30"
+          >
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 text-blue-600 ring-1 ring-blue-100">
+              <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <p className="text-lg font-semibold text-slate-900">Click to select image files</p>
+            <p className="mt-2 text-sm text-slate-500">
+              Supported formats: JPG, PNG, SVG, WEBP
+            </p>
+          </label>
+        </div>
       </div>
     </main>
   );

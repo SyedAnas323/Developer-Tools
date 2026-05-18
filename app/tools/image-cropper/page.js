@@ -75,7 +75,21 @@ export default function ImageCropperPage() {
     setManualHeight('');
     setAspectKey('free');
     const img = new window.Image();
-    img.onload = () => setImageEl(img);
+    img.onload = () => {
+      setImageEl(img);
+      const padX = Math.max(4, Math.round(img.naturalWidth * 0.01));
+      const padY = Math.max(4, Math.round(img.naturalHeight * 0.01));
+      const initialCrop = {
+        x: padX,
+        y: padY,
+        w: Math.max(1, img.naturalWidth - padX * 2),
+        h: Math.max(1, img.naturalHeight - padY * 2),
+      };
+      setCrop(initialCrop);
+      setLastCrop(initialCrop);
+      setManualWidth(String(Math.round(initialCrop.w)));
+      setManualHeight(String(Math.round(initialCrop.h)));
+    };
     img.src = nextUrl;
   }
 
@@ -293,29 +307,31 @@ export default function ImageCropperPage() {
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
           <section>
-            <div
-              onDrop={(event) => {
-                event.preventDefault();
-                readFile(event.dataTransfer.files?.[0]);
-              }}
-              onDragOver={(event) => event.preventDefault()}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
-            >
-              <input
-                ref={inputRef}
-                type="file"
-                accept=".jpg,.jpeg,.png,.webp,.avif,image/*"
-                className="hidden"
-                onChange={(event) => readFile(event.target.files?.[0])}
-              />
-              <button
-                type="button"
-                onClick={() => inputRef.current?.click()}
-                className="w-full rounded-2xl border-2 border-dashed border-slate-300 bg-white px-4 py-8 text-sm font-semibold text-slate-700 hover:border-blue-400"
+            {!imageUrl ? (
+              <div
+                onDrop={(event) => {
+                  event.preventDefault();
+                  readFile(event.dataTransfer.files?.[0]);
+                }}
+                onDragOver={(event) => event.preventDefault()}
+                className="rounded-2xl border border-slate-200 bg-slate-50 p-4"
               >
-                Drag & drop or click to upload (JPG, PNG, WebP, AVIF)
-              </button>
-            </div>
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,.avif,image/*"
+                  className="hidden"
+                  onChange={(event) => readFile(event.target.files?.[0])}
+                />
+                <button
+                  type="button"
+                  onClick={() => inputRef.current?.click()}
+                  className="w-full rounded-2xl border-2 border-dashed border-slate-300 bg-white px-4 py-8 text-sm font-semibold text-slate-700 hover:border-blue-400"
+                >
+                  Drag & drop or click to upload (JPG, PNG, WebP, AVIF)
+                </button>
+              </div>
+            ) : null}
 
             {imageUrl ? (
               <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-100 p-3">
@@ -334,10 +350,35 @@ export default function ImageCropperPage() {
                   <img src={imageUrl} alt="Crop source" className="block h-auto w-full select-none" draggable={false} />
                   {overlayStyle ? (
                     <>
-                      <div className="pointer-events-none absolute inset-0 bg-black/40" />
+                      <div
+                        className="pointer-events-none absolute inset-x-0 top-0 bg-black/55"
+                        style={{ height: overlayStyle.top }}
+                      />
+                      <div
+                        className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/55"
+                        style={{
+                          top: `calc(${overlayStyle.top} + ${overlayStyle.height})`,
+                        }}
+                      />
+                      <div
+                        className="pointer-events-none absolute left-0 bg-black/55"
+                        style={{
+                          top: overlayStyle.top,
+                          width: overlayStyle.left,
+                          height: overlayStyle.height,
+                        }}
+                      />
+                      <div
+                        className="pointer-events-none absolute right-0 bg-black/55"
+                        style={{
+                          top: overlayStyle.top,
+                          left: `calc(${overlayStyle.left} + ${overlayStyle.width})`,
+                          height: overlayStyle.height,
+                        }}
+                      />
                       <div
                         style={overlayStyle}
-                        className="absolute border-2 border-white shadow-[0_0_0_9999px_rgba(0,0,0,0.45)]"
+                        className="absolute border-[3px] border-white"
                         onPointerDown={(event) => {
                           event.stopPropagation();
                           onPointerDown(event, 'move');
@@ -347,14 +388,14 @@ export default function ImageCropperPage() {
                           <button
                             key={h.key}
                             type="button"
-                            className={`absolute h-4 w-4 rounded-full border border-white bg-blue-500 ${h.cls}`}
+                            className={`absolute h-6 w-6 rounded-full border-2 border-white bg-blue-500 ${h.cls}`}
                             onPointerDown={(event) => {
                               event.stopPropagation();
                               onPointerDown(event, h.key);
                             }}
                           />
                         ))}
-                        <div className="absolute left-2 top-2 rounded bg-black/65 px-2 py-1 text-xs font-semibold text-white">
+                        <div className="absolute left-3 top-3 rounded bg-black/70 px-3 py-1 text-sm font-semibold text-white">
                           {Math.round(crop.w)} x {Math.round(crop.h)} px
                         </div>
                       </div>
@@ -366,6 +407,13 @@ export default function ImageCropperPage() {
           </section>
 
           <aside className="space-y-4">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4">
+              <h2 className="text-sm font-semibold text-slate-900">Preview</h2>
+              <div className="mt-3 flex min-h-[140px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-2">
+                {previewSrc ? <img src={previewSrc} alt="Cropped preview" className="max-h-36 rounded object-contain" /> : <span className="text-xs text-slate-500">Select crop area to preview</span>}
+              </div>
+            </div>
+
             <div className="rounded-2xl border border-slate-200 bg-white p-4">
               <h2 className="text-sm font-semibold text-slate-900">Aspect Ratio</h2>
               <div className="mt-3 grid grid-cols-3 gap-2">
@@ -400,13 +448,6 @@ export default function ImageCropperPage() {
                 <button type="button" onClick={() => flip(false)} className="rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Flip V</button>
                 <button type="button" onClick={() => rotate('left')} className="rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Rotate Left</button>
                 <button type="button" onClick={() => rotate('right')} className="rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Rotate Right</button>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-white p-4">
-              <h2 className="text-sm font-semibold text-slate-900">Preview</h2>
-              <div className="mt-3 flex min-h-[140px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 p-2">
-                {previewSrc ? <img src={previewSrc} alt="Cropped preview" className="max-h-36 rounded object-contain" /> : <span className="text-xs text-slate-500">Select crop area to preview</span>}
               </div>
             </div>
 
