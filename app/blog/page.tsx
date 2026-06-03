@@ -8,6 +8,13 @@ export const metadata = {
 
 const posts = [
   {
+    slug: "best-free-online-tools-for-pdf-images-productivity",
+    title: "Best Free Online Tools for PDF, Images, and Productivity",
+    excerpt:
+      "A practical guide to free online PDF tools, image tools, and productivity utilities for everyday work.",
+    readTime: "7 min read",
+  },
+  {
     slug: "how-to-remove-background-from-image",
     title: "How to Remove Background from Image Online for Free",
     excerpt:

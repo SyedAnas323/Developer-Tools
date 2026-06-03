@@ -9,8 +9,13 @@ export async function POST(request) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
- 
-    const apiKey = '8o2f6CGnsg82Gv8Gu75F7Kdy'; 
+    const apiKey = process.env.REMOVEBG_API_KEY?.trim();
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: 'Background remover is temporarily unavailable. Please try again.' },
+        { status: 500 }
+      );
+    }
 
     const removeBgFormData = new FormData();
     removeBgFormData.append('image_file', file);

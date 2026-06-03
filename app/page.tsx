@@ -254,6 +254,12 @@ export default function Home() {
               >
                 About
               </a>
+              <Link
+                href="/blog"
+                className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                Blog
+              </Link>
               <div className="relative">
                 <button
                   type="button"
@@ -302,6 +308,12 @@ export default function Home() {
             >
               About
             </a>
+            <Link
+              href="/blog"
+              className="rounded-full px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+            >
+              Blog
+            </Link>
             <div className="relative">
               <button
                 type="button"
@@ -534,8 +546,9 @@ export default function Home() {
 
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
               {aboutBlogs.map((blog) => (
-                <article
+                <Link
                   key={blog.title}
+                  href={blog.href}
                   className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
@@ -554,7 +567,7 @@ export default function Home() {
                     </h4>
                     <p className="mt-4 flex-1 text-sm leading-7 text-slate-600">{blog.excerpt}</p>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
           </div>

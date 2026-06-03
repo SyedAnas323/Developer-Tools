@@ -30,6 +30,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const blogPosts = [
+    'best-free-online-tools-for-pdf-images-productivity',
+    'how-to-remove-background-from-image',
+    'how-to-edit-pdf-online-free',
+    'how-to-generate-favicon-online',
+    'how-to-compress-images-online-free',
+    'how-to-crop-image-online-free',
+    'how-to-resize-image-online',
+    'how-to-count-words-online',
+    'strong-password-generator-guide',
+    'how-to-compress-pdf-free',
+    'how-to-merge-pdf-files',
+  ];
+
+  const blogRoutes = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
+
   return [
     {
       url: baseUrl,
@@ -37,6 +58,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'daily' as const,
       priority: 1,
     },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
     ...toolRoutes,
+    ...blogRoutes,
   ]
 }
