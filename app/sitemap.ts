@@ -31,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const blogPosts = [
+    'what-is-favicon-icon-and-how-to-use',
     'best-free-online-tools-for-pdf-images-productivity',
     'how-to-remove-background-from-image',
     'how-to-edit-pdf-online-free',

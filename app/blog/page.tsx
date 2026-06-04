@@ -8,6 +8,13 @@ export const metadata = {
 
 const posts = [
   {
+    slug: "what-is-favicon-icon-and-how-to-use",
+    title: "What Is a Favicon Icon? Types, Sizes, and How to Use It",
+    excerpt:
+      "Learn what a favicon icon is, where it appears, common favicon sizes, and how to generate a full icon pack.",
+    readTime: "8 min read",
+  },
+  {
     slug: "best-free-online-tools-for-pdf-images-productivity",
     title: "Best Free Online Tools for PDF, Images, and Productivity",
     excerpt:
