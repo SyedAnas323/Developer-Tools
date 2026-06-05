@@ -31,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const blogPosts = [
+    'convert-image-to-pdf-and-word-to-pdf-online',
     'what-is-favicon-icon-and-how-to-use',
     'best-free-online-tools-for-pdf-images-productivity',
     'how-to-remove-background-from-image',

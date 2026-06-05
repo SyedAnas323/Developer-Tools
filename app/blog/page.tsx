@@ -8,6 +8,13 @@ export const metadata = {
 
 const posts = [
   {
+    slug: "convert-image-to-pdf-and-word-to-pdf-online",
+    title: "Convert Image to PDF and Word to PDF Online Free",
+    excerpt:
+      "Learn how to create clean PDF files from JPG, PNG, DOC, and DOCX files with free online PDF converters.",
+    readTime: "9 min read",
+  },
+  {
     slug: "what-is-favicon-icon-and-how-to-use",
     title: "What Is a Favicon Icon? Types, Sizes, and How to Use It",
     excerpt:
