@@ -6,7 +6,7 @@
 
 // const inter = Inter({ subsets: ["latin"] });
 
-// // Ye Global Metadata hai
+// // Global metadata
 // export const metadata: Metadata = {
 //   title: {
 //     default: "MyToolsHub - Free Online Developer Tools",
@@ -16,7 +16,7 @@
 //   keywords: ["online tools", "developer tools", "image compressor", "json formatter", "web tools"],
 //   authors: [{ name: "Syed Anas" }],
   
-//   // Yahan Verification add hogi
+//   // Add verification here
 //   verification: {
 //     google: "4razs74pssDhzsttCA0hcOcB5iq38aGRqoHWz3UxHpE",
 //   },
@@ -24,7 +24,7 @@
 //   openGraph: {
 //     type: "website",
 //     locale: "en_US",
-//     url: "https://developer-tools-uz59.vercel.app", // Yahan apna live link dalein
+//     url: "https://developer-tools-uz59.vercel.app", // Add your live URL here
 //     siteName: "MyToolsHub",
 //     title: "MyToolsHub - Free Online Tools",
 //     description: "Collection of free tools for daily tasks.",

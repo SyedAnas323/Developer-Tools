@@ -661,7 +661,7 @@ export default function EditPdfPage() {
       setSelectedId(nextBlocks[0]?.id || null);
     } catch (err) {
       console.error(err);
-      setError('PDF load nahin hui. Text-based PDF files is tool mein best work karti hain.');
+      setError('PDF could not be loaded. Text-based PDF files work best in this tool.');
     } finally {
       setLoading(false);
     }
@@ -809,7 +809,7 @@ export default function EditPdfPage() {
       });
 
       if (!response.ok) {
-        let message = 'PDF export nahin hui. Dobara try karein.';
+        let message = 'PDF export failed. Please try again.';
 
         try {
           const data = await response.json();
@@ -852,8 +852,8 @@ export default function EditPdfPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Edit PDF</h1>
           <p className="mt-2 max-w-3xl text-sm text-slate-600">
-            Simple PDF editor jahan aap text blocks ko edit, add, delete aur move kar sakte hain.
-            Final file generate hone ke baad aap usay download bhi kar sakte hain.
+            Simple PDF editor where you can edit, add, delete, and move text blocks.
+            After the final file is generated, you can download it as well.
           </p>
         </div>
 
@@ -985,7 +985,7 @@ export default function EditPdfPage() {
                 </div>
               ) : (
                 <div className="mt-4 rounded-xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
-                  PDF block select karein, phir us ki line edit karein.
+                  Select a PDF block, then edit its line of text.
                 </div>
               )}
             </div>
@@ -993,7 +993,7 @@ export default function EditPdfPage() {
             <div className="rounded-2xl border border-slate-200 bg-white p-5">
               <h2 className="text-lg font-semibold">Export & Download</h2>
               <p className="mt-2 text-sm text-slate-600">
-                Jab aap editing complete kar lein to final PDF generate karein aur phir download karein.
+                When editing is complete, generate the final PDF and then download it.
               </p>
               <button
                 type="button"
@@ -1021,7 +1021,7 @@ export default function EditPdfPage() {
               <div>
                 <h2 className="text-lg font-semibold">Live Preview</h2>
                 <p className="mt-1 text-sm text-slate-600">
-                  Har line ya section yahan se select karke edit ki ja sakti hai. Block ko drag bhi kar sakte hain.
+                  Each line or section can be selected and edited here. You can also drag the block.
                 </p>
               </div>
 
@@ -1121,11 +1121,11 @@ export default function EditPdfPage() {
           <section className="rounded-2xl border border-slate-200 bg-white p-6">
             <h2 className="text-xl font-semibold">How To Use This Tool</h2>
             <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
-              <p><strong>1.</strong> PDF upload karein.</p>
-              <p><strong>2.</strong> Preview mein kisi line ya text block ko select karein.</p>
-              <p><strong>3.</strong> Left panel se text edit, add, delete, font size aur position update karein.</p>
-              <p><strong>4.</strong> Preview mein block ko drag karke nayi jagah le ja sakte hain.</p>
-              <p><strong>5.</strong> Final result ke liye <strong>Generate Final PDF</strong> par click karein aur phir download karein.</p>
+              <p><strong>1.</strong> Upload the PDF.</p>
+              <p><strong>2.</strong> Select any line or text block in the preview.</p>
+              <p><strong>3.</strong> Use the left panel to edit text, add or delete content, and update font size and position.</p>
+              <p><strong>4.</strong> Drag the block in the preview to move it to a new location.</p>
+              <p><strong>5.</strong> Click <strong>Generate Final PDF</strong> to create the result, then download it.</p>
             </div>
           </section>
 
@@ -1133,10 +1133,10 @@ export default function EditPdfPage() {
             <h2 className="text-xl font-semibold">Advantages Of This Tool</h2>
             <div className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
               <p><strong>Simple UI:</strong> Complex design ke baghair clean aur professional editing experience.</p>
-              <p><strong>Editable Sections:</strong> Extracted text blocks ko line-by-line ya section-wise update kar sakte hain.</p>
-              <p><strong>Add / Delete Support:</strong> Naya text add karein ya purana block delete karein.</p>
-              <p><strong>Live Preview:</strong> Changes foran preview panel mein nazar aati hain.</p>
-              <p><strong>Download Ready:</strong> Final edited PDF generate karke download kar sakte hain.</p>
+              <p><strong>Editable Sections:</strong> Extracted text blocks can be updated line by line or section by section.</p>
+              <p><strong>Add / Delete Support:</strong> Add new text or delete an existing block.</p>
+              <p><strong>Live Preview:</strong> Changes appear immediately in the preview panel.</p>
+              <p><strong>Download Ready:</strong> Generate the final edited PDF and download it.</p>
             </div>
           </section>
         </div>
