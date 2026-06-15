@@ -7,20 +7,7 @@ import { TOOL_FAQS } from './faq-data';
 import { ToolBreadcrumbSchema, ToolWebApplicationSchema } from './metadata';
 
 const TOOL_CONTENT = {
-  'background-remover': {
-    title: 'Background Remover',
-    steps: [
-      'Upload an image from your device.',
-      'Wait for the tool to process the image and remove the background.',
-      'Preview both the original image and the transparent result.',
-    ],
-    advantages: [
-      'Helps create clean product images and profile pictures quickly.',
-      'Shows a before-and-after preview before you save the result.',
-      'Lets users download the processed image as a transparent PNG.',
-    ],
-    download: 'When processing finishes, click the download button to save the PNG file.',
-  },
+  'background-remover': null,
   'edit-pdf': null,
   'favicon-generator': {
     title: 'Favicon Generator',
@@ -37,34 +24,8 @@ const TOOL_CONTENT = {
     ],
     download: 'Click generate favicon package to download favicon.ico, PNG sizes, and site.webmanifest in one ZIP.',
   },
-  'image-compressor': {
-    title: 'Image Compressor',
-    steps: [
-      'Upload a JPG, PNG, or WebP image from your device.',
-      'Let the browser optimize the image and create a smaller file.',
-      'Review the original size and compressed size before downloading.',
-    ],
-    advantages: [
-      'Helps websites load faster and reduces bandwidth usage.',
-      'Keeps the workflow simple with instant browser-based compression.',
-      'Makes it easy to save a smaller file without installing extra software.',
-    ],
-    download: 'Use the download button to save the compressed image file.',
-  },
-  'image-resizer': {
-    title: 'Image Resizer',
-    steps: [
-      'Upload your image and let the tool read its original dimensions.',
-      'Enter the width and height you want in pixels.',
-      'Click the resize button to generate the updated image.',
-    ],
-    advantages: [
-      'Good for social media, profile images, and custom size requirements.',
-      'Shows the original preview before creating the resized version.',
-      'Makes it easy to download the final resized image.',
-    ],
-    download: 'After resizing, click the download button to save the new image.',
-  },
+  'image-compressor': null,
+  'image-resizer': null,
   'image-format-converter': {
     title: 'Image Format Converter',
     steps: [
@@ -135,34 +96,8 @@ const TOOL_CONTENT = {
       'Fast way to generate a random password again and again.',
     ],
   },
-  'pdf-merge': {
-    title: 'PDF Merge',
-    steps: [
-      'Upload at least two PDF files from your device.',
-      'Review the selected files and keep the order you want in the final document.',
-      'Click the merge button to combine all PDFs into one file.',
-    ],
-    advantages: [
-      'Helps combine reports, invoices, forms, and multi-part documents quickly.',
-      'Creates one final PDF instead of sending many separate files.',
-      'Keeps the merge workflow simple and download-ready.',
-    ],
-    download: 'After the merge finishes, use the download button to save the final merged PDF.',
-  },
-  'pdf-compressor': {
-    title: 'PDF Compressor',
-    steps: [
-      'Upload the PDF file you want to compress.',
-      'Wait while the tool creates a smaller version of the document.',
-      'Compare the original size and the compressed size on screen.',
-    ],
-    advantages: [
-      'Helps reduce file size for email, uploads, and storage.',
-      'Shows the size savings clearly before download.',
-      'Makes PDF optimization easy from one simple page.',
-    ],
-    download: 'Click the download button to save the compressed PDF.',
-  },
+  'pdf-merge': null,
+  'pdf-compressor': null,
   'qr-generator': {
     title: 'QR Generator',
     steps: [
@@ -383,8 +318,8 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
         description={`Use ${toolLabel} online for free on MyToolsHub. Fast, browser-based workflow with instant results.`}
       />
       <ToolInfoSection content={content} />
-      <RelatedToolsSection slug={slug} />
-      <ToolFaqSection slug={slug} />
+      {slug !== 'pdf-compressor' && slug !== 'pdf-merge' ? <RelatedToolsSection slug={slug} /> : null}
+      {slug !== 'image-resizer' && slug !== 'pdf-compressor' && slug !== 'pdf-merge' ? <ToolFaqSection slug={slug} /> : null}
     </div>
   );
 }

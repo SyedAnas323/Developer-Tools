@@ -1,10 +1,19 @@
 import { createToolMetadata, ToolFaqSchema } from '../metadata';
 
 export const metadata = createToolMetadata({
-  title: 'Remove Background from Image Free - AI Background Eraser | MyToolsHub',
+  title: 'Free Background Remover Online - Remove Background From Image | MyToolsHub',
   description:
-    'Remove the background from any image automatically using AI. Get a transparent PNG in seconds - perfect for product photos, profile pictures, and design work. Free.',
-  keywords: ['remove background from image free', 'background remover online', 'transparent background maker', 'remove bg free no signup', 'erase background from photo ai'],
+    'Remove background from image files online for free. Create transparent PNG images, clean product photos, and social media cutouts in seconds with AI.',
+  keywords: [
+    'background remover',
+    'background remover online',
+    'free background remover',
+    'remove background from image',
+    'remove image background',
+    'transparent background maker',
+    'photo background remover',
+    'ai background remover',
+  ],
   slug: 'background-remover',
 });
 
