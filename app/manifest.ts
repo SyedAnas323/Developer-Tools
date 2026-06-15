@@ -11,9 +11,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#2563eb', // Blue color
     icons: [
       {
-        src: '/favicon.ico', // Aapke public folder mein icon hona chahiye
+        src: '/images/tools-hub.png',
         sizes: 'any',
-        type: 'image/x-icon',
+        type: 'image/png',
       },
     ],
   }

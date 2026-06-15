@@ -295,15 +295,28 @@ export const metadata: Metadata = {
     siteName: "MyToolsHub",
     title: "MyToolsHub - Free Online PDF, Image, and Utility Tools",
     description: "Free tools for PDF, image, and productivity tasks with fast, browser-based workflows.",
+    images: [
+      {
+        url: "/images/tools-hub.png",
+        width: 928,
+        height: 269,
+        alt: "MyToolsHub",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "MyToolsHub - Free Online Tools",
     description: "Compress, convert, and optimize files online for free. Fast and easy tools for daily use.",
+    images: ["/images/tools-hub.png"],
   },
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: '/images/tools-hub.png',
+    apple: '/images/tools-hub.png',
   },
 };
 

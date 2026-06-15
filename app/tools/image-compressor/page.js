@@ -50,11 +50,11 @@ export default function ImageCompressor() {
             Image Compressor
           </p>
           <h1 className="mt-3 text-3xl font-bold text-slate-900">
-            Compress Images Online Free Without Losing Quality
+            Free Image Compressor Online
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Upload an image, let the tool reduce the file size, then review the result and download
-            the compressed version.
+            Compress JPG, PNG, and WebP images in your browser to reduce file size without
+            noticeable quality loss.
           </p>
         </div>
 
@@ -102,7 +102,11 @@ export default function ImageCompressor() {
               </button>
             </div>
             <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
-              <img src={previewUrl} alt="Uploaded preview" className="mx-auto max-h-[360px] rounded-xl object-contain" />
+              <img
+                src={previewUrl}
+                alt="Uploaded preview"
+                className="mx-auto max-h-[360px] rounded-xl object-contain"
+              />
             </div>
           </div>
         ) : null}
@@ -136,6 +140,7 @@ export default function ImageCompressor() {
           </div>
         )}
       </div>
+
     </main>
   );
 }

@@ -15,9 +15,12 @@ export const TOOL_FAQS = {
     ['Can I download everything in one file?', 'Yes. The tool packages all generated files into one ZIP for quick download.'],
   ],
   'image-compressor': [
-    ['How much can I reduce image size?', 'When you compress images online free, file size reduction depends on resolution, format, and original quality. Many JPG and PNG files can be reduced by a noticeable margin for faster page load and easier sharing. For best results, upload high-resolution images and compare output size before download.'],
-    ['Does compression reduce quality?', 'This image compressor is tuned to reduce image file size while keeping visual quality suitable for websites, social media, and email. Small quality changes can happen at stronger compression levels, especially on detailed photos. You can preview and download the best balance for your use case.'],
-    ['Can I compress JPG and PNG files?', 'Yes, you can compress JPG, PNG, and WebP images online using this free tool. It works directly in your browser and does not require signup. This makes it useful for bloggers, students, and businesses that need smaller images quickly.'],
+    ['What is an image compressor?', 'An image compressor reduces image file size while keeping visuals clear enough for websites, social media, and sharing.'],
+    ['How much can I reduce image size?', 'The final reduction depends on the image type, resolution, and original quality. JPG files often shrink the most, while PNG and WebP results depend on transparency and image detail.'],
+    ['Does compression reduce quality?', 'This tool is designed to keep quality changes minimal for common web use. Stronger compression can lower quality a little, but the goal is to keep the image visually useful.'],
+    ['Can I compress JPG and PNG files?', 'Yes, this free image compressor supports JPG, PNG, and WebP images directly in the browser without signup.'],
+    ['Can I use it on mobile devices?', 'Yes, the tool works on smartphones, tablets, and desktop browsers.'],
+    ['Are uploaded files stored?', 'Files are processed for the task and are not intended for permanent storage on the platform.'],
   ],
   'image-resizer': [
     ['Can I resize images to exact pixels?', 'Yes, this resize image online free tool lets you enter exact width and height in pixels. It is useful for social media post sizes, website banners, and marketplace image requirements. Set your target dimensions and download the resized image instantly.'],

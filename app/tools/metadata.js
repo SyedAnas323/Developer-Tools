@@ -1,5 +1,8 @@
 import { TOOL_FAQS } from './faq-data';
 const BASE_URL = 'https://toolshub.cyphersol.com';
+const DEFAULT_OG_IMAGE = '/images/tools-hub.png';
+const DEFAULT_OG_IMAGE_WIDTH = 928;
+const DEFAULT_OG_IMAGE_HEIGHT = 269;
 
 export function createToolMetadata({ title, description, keywords, slug }) {
   const keywordList = Array.isArray(keywords) ? keywords : String(keywords || '')
@@ -34,11 +37,20 @@ export function createToolMetadata({ title, description, keywords, slug }) {
       siteName: 'MyToolsHub',
       type: 'website',
       locale: 'en_US',
+      images: [
+        {
+          url: DEFAULT_OG_IMAGE,
+          width: DEFAULT_OG_IMAGE_WIDTH,
+          height: DEFAULT_OG_IMAGE_HEIGHT,
+          alt: `${title} | MyToolsHub`,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
@@ -68,18 +80,56 @@ export function ToolFaqSchema({ slug }) {
   );
 }
 
+export function ToolBreadcrumbSchema({ slug, label }) {
+  if (!slug || !label) return null;
+
+  const url = `${BASE_URL}/tools/${slug}`;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: BASE_URL,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Tools',
+        item: `${BASE_URL}/tools`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: label,
+        item: url,
+      },
+    ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 export function ToolWebApplicationSchema({ slug, name, description }) {
   if (!slug || !name) return null;
   const url = `${BASE_URL}/tools/${slug}`;
 
   const schema = {
     '@context': 'https://schema.org',
-    '@type': 'WebApplication',
+    '@type': 'SoftwareApplication',
     name,
     url,
-    applicationCategory: 'UtilitiesApplication',
-    operatingSystem: 'Any',
-    browserRequirements: 'Requires JavaScript. Works in modern web browsers.',
+    applicationCategory: 'UtilityApplication',
+    operatingSystem: 'Web Browser',
+    browserRequirements: 'Requires JavaScript and a modern browser.',
     offers: {
       '@type': 'Offer',
       price: '0',

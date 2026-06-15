@@ -221,23 +221,35 @@ export default function Home() {
     })),
   };
 
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'MyToolsHub',
+    url: 'https://toolshub.cyphersol.com',
+  };
+
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'MyToolsHub',
+    url: 'https://toolshub.cyphersol.com',
+    logo: 'https://toolshub.cyphersol.com/images/tools-hub.png',
+  };
+
   return (
     <main className="bg-slate-50 font-sans text-slate-900">
       <nav className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-3">
             <Link href="/" className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-500 to-cyan-400 text-lg font-black text-white shadow-lg shadow-blue-200">
-                MT
-              </div>
-              <div>
-                <div className="text-2xl font-black tracking-tight text-slate-900">
-                  MyTools<span className="text-blue-600">Hub</span>
-                </div>
-                <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-                  Utility Workspace
-                </div>
-              </div>
+              <Image
+                src="/images/tools-hub.png"
+                alt="ToolsHub"
+                width={240}
+                height={72}
+                priority
+                className="h-11 w-auto sm:h-12"
+              />
             </Link>
 
             <div className="hidden items-center gap-2 md:flex">
@@ -590,6 +602,14 @@ export default function Home() {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </section>
 

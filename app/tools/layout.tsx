@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { TOOL_FAQS } from './faq-data';
-import { ToolWebApplicationSchema } from './metadata';
+import { ToolBreadcrumbSchema, ToolWebApplicationSchema } from './metadata';
 
 const TOOL_CONTENT = {
   'background-remover': {
@@ -40,14 +40,14 @@ const TOOL_CONTENT = {
   'image-compressor': {
     title: 'Image Compressor',
     steps: [
-      'Upload the image you want to reduce in size.',
-      'Wait a moment while the tool creates a smaller version.',
-      'Compare the original size with the compressed file size.',
+      'Upload a JPG, PNG, or WebP image from your device.',
+      'Let the browser optimize the image and create a smaller file.',
+      'Review the original size and compressed size before downloading.',
     ],
     advantages: [
-      'Useful for websites, forms, and faster image sharing.',
-      'Keeps the workflow simple with an instant result card.',
-      'Helps reduce file size without extra software.',
+      'Helps websites load faster and reduces bandwidth usage.',
+      'Keeps the workflow simple with instant browser-based compression.',
+      'Makes it easy to save a smaller file without installing extra software.',
     ],
     download: 'Use the download button to save the compressed image file.',
   },
@@ -221,6 +221,26 @@ const TOOL_CONTENT = {
   },
 };
 
+const TOOL_LABELS: Record<string, string> = {
+  'background-remover': 'Background Remover',
+  'edit-pdf': 'Edit PDF',
+  'favicon-generator': 'Favicon Generator',
+  'image-compressor': 'Image Compressor',
+  'image-cropper': 'Image Cropper',
+  'image-format-converter': 'Image Format Converter',
+  'image-resizer': 'Image Resizer',
+  'image-to-pdf': 'Image To PDF',
+  'json-formatter': 'JSON Formatter',
+  'password-generator': 'Password Generator',
+  'pdf-compressor': 'PDF Compressor',
+  'pdf-merge': 'PDF Merge',
+  'qr-generator': 'QR Generator',
+  'word-counter': 'Word Counter',
+  'word-to-pdf': 'Word To PDF',
+  'youtube-downloader': 'YouTube Downloader',
+  'youtube-thumbnail': 'YouTube Thumbnail Downloader',
+};
+
 type ToolContent = {
   title: string;
   steps: string[];
@@ -350,18 +370,18 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const slug = pathname.split('/').filter(Boolean).at(-1) || '';
   const content = TOOL_CONTENT[slug as keyof typeof TOOL_CONTENT];
+  const toolLabel = content?.title || TOOL_LABELS[slug] || slug;
 
   return (
     <div className="min-h-screen bg-white text-slate-900">
       <Navbar />
       {children}
-      {content ? (
-        <ToolWebApplicationSchema
-          slug={slug}
-          name={`${content.title} | MyToolsHub`}
-          description={`Use ${content.title} online for free on MyToolsHub. Fast, browser-based workflow with instant results.`}
-        />
-      ) : null}
+      <ToolBreadcrumbSchema slug={slug} label={toolLabel} />
+      <ToolWebApplicationSchema
+        slug={slug}
+        name={toolLabel}
+        description={`Use ${toolLabel} online for free on MyToolsHub. Fast, browser-based workflow with instant results.`}
+      />
       <ToolInfoSection content={content} />
       <RelatedToolsSection slug={slug} />
       <ToolFaqSection slug={slug} />

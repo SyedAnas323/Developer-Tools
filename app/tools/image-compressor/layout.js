@@ -1,10 +1,19 @@
 import { createToolMetadata, ToolFaqSchema } from '../metadata';
 
 export const metadata = createToolMetadata({
-  title: 'Compress Images Online Free - Reduce File Size Without Losing Quality | MyToolsHub',
+  title: 'Free Image Compressor Online - Reduce JPG, PNG & WebP Size | MyToolsHub',
   description:
-    'Compress JPG, PNG, and WebP images online for free. Reduce image file size by up to 80% without visible quality loss. No signup required. Fast and easy.',
-  keywords: ['compress image online free', 'reduce image file size', 'image compressor online', 'compress jpg online free', 'compress png without losing quality'],
+    'Compress JPG, PNG and WebP images online for free. Reduce image file size without noticeable quality loss. Fast, secure and easy to use image compression tool.',
+  keywords: [
+    'image compressor',
+    'image compressor online',
+    'compress image online',
+    'reduce image size',
+    'compress jpg',
+    'compress png',
+    'compress webp',
+    'free image compressor',
+  ],
   slug: 'image-compressor',
 });
 

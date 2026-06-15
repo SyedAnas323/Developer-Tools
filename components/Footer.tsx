@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -105,24 +106,13 @@ export default function Footer() {
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-6 h-6 rounded-md bg-blue-500/20 flex items-center justify-center">
-              <svg
-                className="w-3.5 h-3.5 text-blue-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                />
-              </svg>
-            </div>
-            <span className="text-[13px] font-semibold text-white/70 group-hover:text-white transition-colors">
-              MyToolsHub
-            </span>
+            <Image
+              src="/images/tools-hub.png"
+              alt="ToolsHub"
+              width={180}
+              height={54}
+              className="h-8 w-auto opacity-90 transition-opacity group-hover:opacity-100"
+            />
           </Link>
 
           <p className="text-[12px] text-gray-500 text-center">

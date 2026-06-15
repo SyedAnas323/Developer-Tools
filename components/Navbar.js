@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -31,17 +32,14 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-500 to-cyan-400 text-base font-black text-white shadow-lg shadow-blue-200">
-              MT
-            </div>
-            <div>
-              <div className="text-2xl font-black tracking-tight text-slate-900">
-                MyTools<span className="text-blue-600">Hub</span>
-              </div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-                Utility Workspace
-              </div>
-            </div>
+            <Image
+              src="/images/tools-hub.png"
+              alt="ToolsHub"
+              width={240}
+              height={72}
+              priority
+              className="h-10 w-auto sm:h-11 md:h-12"
+            />
           </Link>
 
           <div className="hidden items-center gap-2 md:flex">
