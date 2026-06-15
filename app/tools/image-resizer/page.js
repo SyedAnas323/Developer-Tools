@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { TOOL_FAQS } from '../faq-data';
 
@@ -267,7 +267,7 @@ export default function ImageResizer() {
   const [resizedDimensions, setResizedDimensions] = useState({ w: 0, h: 0 });
   const [width, setWidth] = useState(1200);
   const [height, setHeight] = useState(1200);
-  const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
+  const [maintainAspectRatio, setMaintainAspectRatio] = useState(false);
   const [outputFormat, setOutputFormat] = useState('original');
   const [originalFileSize, setOriginalFileSize] = useState(0);
   const [resizedFileSize, setResizedFileSize] = useState(0);
@@ -276,15 +276,13 @@ export default function ImageResizer() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl, resizedUrl]);
+  const normalizeDimension = (value) => {
+    const nextValue = Number(value);
+    if (!Number.isFinite(nextValue)) return 0;
+    return Math.max(1, Math.round(nextValue));
+  };
 
   const handleReset = () => {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-
     setImage('');
     setPreviewUrl('');
     setResizedUrl('');
@@ -292,7 +290,7 @@ export default function ImageResizer() {
     setResizedDimensions({ w: 0, h: 0 });
     setWidth(1200);
     setHeight(1200);
-    setMaintainAspectRatio(true);
+    setMaintainAspectRatio(false);
     setOutputFormat('original');
     setOriginalFileSize(0);
     setResizedFileSize(0);
@@ -310,34 +308,34 @@ export default function ImageResizer() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    if (resizedUrl) URL.revokeObjectURL(resizedUrl);
-
-    const url = URL.createObjectURL(file);
     const reader = new FileReader();
 
     setLoading(true);
     setError('');
-    setImage(url);
-    setPreviewUrl(url);
+    setImage('');
+    setPreviewUrl('');
     setResizedUrl('');
     setOriginalFileSize(file.size);
     setSourceMimeType(file.type || 'image/jpeg');
 
     reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
       const img = new Image();
       img.onload = () => {
+        setImage(dataUrl);
+        setPreviewUrl(dataUrl);
         setWidth(img.width);
         setHeight(img.height);
         setOriginalDimensions({ w: img.width, h: img.height });
         setResizedDimensions({ w: img.width, h: img.height });
+        setMaintainAspectRatio(false);
         setLoading(false);
       };
       img.onerror = () => {
         setLoading(false);
         setError('Unable to read this image. Please try a different file.');
       };
-      img.src = ev.target.result;
+      img.src = dataUrl;
     };
     reader.readAsDataURL(file);
   };
@@ -362,8 +360,18 @@ export default function ImageResizer() {
     }
   };
 
+  const suggestedHeight =
+    originalDimensions.w && originalDimensions.h && width !== ''
+      ? Math.max(1, Math.round((Number(width) * originalDimensions.h) / originalDimensions.w))
+      : null;
+
+  const suggestedWidth =
+    originalDimensions.w && originalDimensions.h && height !== ''
+      ? Math.max(1, Math.round((Number(height) * originalDimensions.w) / originalDimensions.h))
+      : null;
+
   const resizeImage = () => {
-    if (!image || !width || !height) return;
+    if (!image) return;
 
     setLoading(true);
     setError('');
@@ -372,8 +380,14 @@ export default function ImageResizer() {
     const ctx = canvas.getContext('2d');
     const img = new Image();
     const targetMime = getOutputMime(outputFormat, sourceMimeType);
-    const targetWidth = Number(width);
-    const targetHeight = Number(height);
+    const targetWidth = normalizeDimension(width);
+    const targetHeight = normalizeDimension(height);
+
+    if (!targetWidth || !targetHeight) {
+      setLoading(false);
+      setError('Please enter valid width and height values.');
+      return;
+    }
 
     img.onload = () => {
       canvas.width = targetWidth;
@@ -638,10 +652,17 @@ export default function ImageResizer() {
                     </span>
                     <input
                       type="number"
+                      min="1"
+                      step="1"
                       value={width}
                       onChange={(e) => handleWidthChange(e.target.value)}
                       className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-indigo-500"
                     />
+                    <p className="text-xs text-slate-500">
+                      {suggestedWidth
+                        ? `Suggested width for current height: ${suggestedWidth}px`
+                        : 'Type any width you want. This value can be independent.'}
+                    </p>
                   </label>
 
                   <label className="space-y-2">
@@ -650,10 +671,17 @@ export default function ImageResizer() {
                     </span>
                     <input
                       type="number"
+                      min="1"
+                      step="1"
                       value={height}
                       onChange={(e) => handleHeightChange(e.target.value)}
                       className="w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none focus:border-indigo-500"
                     />
+                    <p className="text-xs text-slate-500">
+                      {suggestedHeight
+                        ? `Suggested height for current width: ${suggestedHeight}px`
+                        : 'Type any height you want. This value can be independent.'}
+                    </p>
                   </label>
 
                   <label className="space-y-2">
@@ -679,7 +707,12 @@ export default function ImageResizer() {
                       onChange={(e) => setMaintainAspectRatio(e.target.checked)}
                       className="h-4 w-4 rounded border-slate-300 text-indigo-600"
                     />
-                    <span className="text-sm font-medium text-slate-700">Lock aspect ratio</span>
+                    <div>
+                      <span className="block text-sm font-medium text-slate-700">Lock aspect ratio</span>
+                      <span className="block text-xs text-slate-500">
+                        Turn this on only when you want the other side to adjust automatically.
+                      </span>
+                    </div>
                   </label>
                 </div>
 

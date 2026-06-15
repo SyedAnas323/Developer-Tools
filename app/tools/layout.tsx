@@ -6,154 +6,31 @@ import { usePathname } from 'next/navigation';
 import { TOOL_FAQS } from './faq-data';
 import { ToolBreadcrumbSchema, ToolWebApplicationSchema } from './metadata';
 
-const TOOL_CONTENT = {
+type ToolContent = {
+  title: string;
+  steps: string[];
+  advantages: string[];
+  download?: string;
+} | null;
+
+const TOOL_CONTENT: Record<string, ToolContent> = {
   'background-remover': null,
   'edit-pdf': null,
-  'favicon-generator': {
-    title: 'Favicon Generator',
-    steps: [
-      'Upload image by drag-and-drop or click upload.',
-      'Preview all standard favicon sizes before export.',
-      'Set background, padding, and shape options.',
-      'Generate package and download all icons in one ZIP file.',
-    ],
-    advantages: [
-      'Creates complete favicon bundle for website and PWA usage.',
-      'Saves time with multiple size generation in one click.',
-      'Includes HTML snippet and manifest-ready icon files.',
-    ],
-    download: 'Click generate favicon package to download favicon.ico, PNG sizes, and site.webmanifest in one ZIP.',
-  },
+  'favicon-generator': null,
+  'image-cropper': null,
+  'json-formatter': null,
   'image-compressor': null,
   'image-resizer': null,
-  'image-format-converter': {
-    title: 'Image Format Converter',
-    steps: [
-      'Upload an image by click or drag-and-drop.',
-      'Preview the uploaded image to confirm it is correct.',
-      'Select output format from PNG, JPG, WebP, or AVIF.',
-      'Click convert and download the output instantly.',
-    ],
-    advantages: [
-      'Converts common image formats from one simple page.',
-      'Keeps workflow fast with instant browser-based processing.',
-      'Useful for web optimization, social uploads, and compatibility.',
-    ],
-    download: 'After conversion, click the download button to save your file in the selected format.',
-  },
-  'image-cropper': {
-    title: 'Image Cropper',
-    steps: [
-      'Upload image by click or drag-and-drop.',
-      'Draw crop area and resize using handles from corners and edges.',
-      'Use aspect ratio presets or manual width/height for exact crop.',
-      'Preview live result and click crop and download instantly.',
-    ],
-    advantages: [
-      'Gives precise crop control with visual handles and dimmed background.',
-      'Supports rotate and flip for quick image adjustments before export.',
-      'Runs directly in browser with instant output in multiple formats.',
-    ],
-    download: 'Select output format (PNG, JPG, or WebP) and use crop and download to save the result.',
-  },
-  'image-to-pdf': {
-    title: 'Image To PDF',
-    steps: [
-      'Upload one or more images that you want to combine.',
-      'Arrange or review the image order if needed.',
-      'Create the PDF to merge all selected images into one file.',
-    ],
-    advantages: [
-      'Turns multiple images into a single easy-to-share document.',
-      'Useful for notes, scans, and photo collections.',
-      'Keeps the conversion flow simple for quick downloads.',
-    ],
-    download: 'Once the PDF is generated, use the download button to save the file.',
-  },
-  'json-formatter': {
-    title: 'JSON Formatter',
-    steps: [
-      'Paste raw JSON into the input editor.',
-      'Click format to beautify the JSON or minify to compress it.',
-      'Review the output panel and copy the result if needed.',
-    ],
-    advantages: [
-      'Makes JSON easier to read and debug.',
-      'Helps catch invalid JSON before using it elsewhere.',
-      'Useful for developers working with APIs and config files.',
-    ],
-  },
-  'password-generator': {
-    title: 'Password Generator',
-    steps: [
-      'Choose the password length using the slider.',
-      'Click generate to create a new secure password.',
-      'Copy the generated password and use it where needed.',
-    ],
-    advantages: [
-      'Creates stronger passwords than manually typed ones.',
-      'Useful for accounts, apps, and admin dashboards.',
-      'Fast way to generate a random password again and again.',
-    ],
-  },
+  'image-format-converter': null,
+  'image-to-pdf': null,
   'pdf-merge': null,
   'pdf-compressor': null,
-  'qr-generator': {
-    title: 'QR Generator',
-    steps: [
-      'Enter the URL, text, or content you want to convert into a QR code.',
-      'Generate the QR image and preview it on the page.',
-      'Save the QR code for printing, sharing, or scanning.',
-    ],
-    advantages: [
-      'Useful for websites, menus, contact info, and marketing material.',
-      'Provides a quick way to create scannable codes online.',
-      'Keeps the process simple for both mobile and desktop users.',
-    ],
-    download: 'Download the generated QR code image when it appears.',
-  },
-  'word-counter': {
-    title: 'Word Counter',
-    steps: [
-      'Paste or type your text into the editor.',
-      'Watch the counts update for words, characters, and more.',
-      'Edit the text further if you need to hit a specific limit.',
-    ],
-    advantages: [
-      'Useful for essays, blogs, captions, and SEO content.',
-      'Saves time by calculating counts instantly.',
-      'Helps writers stay within platform or assignment limits.',
-    ],
-  },
-  'word-to-pdf': {
-    title: 'Word To PDF',
-    steps: [
-      'Upload a valid DOC or DOCX file.',
-      'Click convert to generate the PDF version of your document.',
-      'Wait for the tool to finish processing the file.',
-    ],
-    advantages: [
-      'Converts editable Word files into shareable PDF format.',
-      'Useful for resumes, reports, and printable documents.',
-      'Keeps the conversion process simple and direct.',
-    ],
-    download: 'After conversion, click the download button to save the PDF file.',
-  },
+  'password-generator': null,
+  'qr-generator': null,
+  'word-counter': null,
+  'word-to-pdf': null,
+  'youtube-thumbnail': null,
   'youtube-downloader': null,
-  'youtube-thumbnail': {
-    title: 'YouTube Thumbnail Downloader',
-    steps: [
-      'Paste a valid YouTube video URL into the input field.',
-      'Click the button to load available thumbnail versions.',
-      'Choose the image quality you want from the available options.',
-    ],
-    advantages: [
-      'Lets users save preview images from YouTube videos quickly.',
-      'Offers multiple quality options from one link.',
-      'Helpful for research, design references, and content planning.',
-    ],
-    download: 'Open the quality option you want and save the image to your device.',
-  },
 };
 
 const TOOL_LABELS: Record<string, string> = {
@@ -175,13 +52,6 @@ const TOOL_LABELS: Record<string, string> = {
   'youtube-downloader': 'YouTube Downloader',
   'youtube-thumbnail': 'YouTube Thumbnail Downloader',
 };
-
-type ToolContent = {
-  title: string;
-  steps: string[];
-  advantages: string[];
-  download?: string;
-} | null;
 
 const RELATED_LINKS: Record<string, Array<{ href: string; anchor: string }>> = {
   'image-compressor': [
@@ -311,15 +181,17 @@ export default function ToolsLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-white text-slate-900">
       <Navbar />
       {children}
-      <ToolBreadcrumbSchema slug={slug} label={toolLabel} />
-      <ToolWebApplicationSchema
-        slug={slug}
-        name={toolLabel}
-        description={`Use ${toolLabel} online for free on MyToolsHub. Fast, browser-based workflow with instant results.`}
-      />
+      {slug !== 'word-counter' && slug !== 'password-generator' && slug !== 'json-formatter' && slug !== 'favicon-generator' && slug !== 'image-cropper' && slug !== 'youtube-thumbnail' && slug !== 'youtube-downloader' ? <ToolBreadcrumbSchema slug={slug} label={toolLabel} /> : null}
+      {slug !== 'word-counter' && slug !== 'password-generator' && slug !== 'json-formatter' && slug !== 'favicon-generator' && slug !== 'image-cropper' && slug !== 'youtube-thumbnail' && slug !== 'youtube-downloader' ? (
+        <ToolWebApplicationSchema
+          slug={slug}
+          name={toolLabel}
+          description={`Use ${toolLabel} online for free on MyToolsHub. Fast, browser-based workflow with instant results.`}
+        />
+      ) : null}
       <ToolInfoSection content={content} />
-      {slug !== 'pdf-compressor' && slug !== 'pdf-merge' ? <RelatedToolsSection slug={slug} /> : null}
-      {slug !== 'image-resizer' && slug !== 'pdf-compressor' && slug !== 'pdf-merge' ? <ToolFaqSection slug={slug} /> : null}
+      {slug !== 'pdf-compressor' && slug !== 'pdf-merge' && slug !== 'word-counter' && slug !== 'password-generator' && slug !== 'json-formatter' && slug !== 'favicon-generator' && slug !== 'image-cropper' && slug !== 'youtube-thumbnail' && slug !== 'youtube-downloader' ? <RelatedToolsSection slug={slug} /> : null}
+      {slug !== 'image-resizer' && slug !== 'pdf-compressor' && slug !== 'pdf-merge' && slug !== 'word-counter' && slug !== 'word-to-pdf' && slug !== 'image-to-pdf' && slug !== 'qr-generator' && slug !== 'image-format-converter' && slug !== 'password-generator' && slug !== 'json-formatter' && slug !== 'favicon-generator' && slug !== 'image-cropper' && slug !== 'youtube-thumbnail' && slug !== 'youtube-downloader' ? <ToolFaqSection slug={slug} /> : null}
     </div>
   );
 }

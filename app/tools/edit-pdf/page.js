@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const FONT_OPTIONS = [
@@ -201,9 +202,270 @@ function getPreviewOverlayStyle(block, pageHeight, zoom, isSelected) {
         ? 'rgba(255,255,255,0.94)'
         : isSelected
           ? 'rgba(239,246,255,0.55)'
-          : 'transparent',
+      : 'transparent',
   };
 }
+
+function SectionHeading({ eyebrow, title, description }) {
+  return (
+    <div className="max-w-3xl">
+      {eyebrow ? (
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-600">
+          {eyebrow}
+        </p>
+      ) : null}
+      <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">{title}</h2>
+      {description ? (
+        <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">{description}</p>
+      ) : null}
+    </div>
+  );
+}
+
+function DataTable({ columns, rows }) {
+  return (
+    <div className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse text-left text-sm">
+          <thead className="bg-slate-50 text-slate-700">
+            <tr>
+              {columns.map((column) => (
+                <th key={column} className="px-5 py-4 font-semibold">
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-200">
+            {rows.map((row) => (
+              <tr key={row.feature || row.title} className="align-top">
+                {Object.values(row).map((value, index) => (
+                  <td
+                    key={`${value}-${index}`}
+                    className={`px-5 py-4 text-slate-600 ${index === 0 ? 'font-medium text-slate-900' : ''}`}
+                  >
+                    {value}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+const PDF_EDITOR_FEATURES = [
+  {
+    title: 'Add Text To PDF',
+    text: 'Insert new text anywhere on the page for updates, labels, notes, or form-style editing.',
+  },
+  {
+    title: 'Edit Existing Content',
+    text: 'Select extracted text blocks and change the wording, font size, position, or color.',
+  },
+  {
+    title: 'Add Images',
+    text: 'Place logos, signatures, icons, or supporting visuals into the document layout.',
+  },
+  {
+    title: 'Highlight Text',
+    text: 'Mark important lines so reviewers can quickly scan contracts, forms, and reports.',
+  },
+  {
+    title: 'Annotate Documents',
+    text: 'Use notes and markup to explain changes or request feedback from collaborators.',
+  },
+  {
+    title: 'Add Signatures',
+    text: 'Add a visual signature for approvals, acknowledgements, or routine sign-off workflows.',
+  },
+  {
+    title: 'Reorder Pages',
+    text: 'Move pages or structure sections so the final document reads in the right sequence.',
+  },
+];
+
+const PDF_EDITOR_BENEFITS = [
+  'Keeps the original PDF format intact while giving you practical editing control.',
+  'Reduces the need to convert files back and forth between formats.',
+  'Helps teams make quick updates without rebuilding documents from scratch.',
+  'Supports cleaner collaboration when multiple people review the same file.',
+  'Works well for everyday corrections, annotations, and small layout adjustments.',
+];
+
+const PDF_EDITOR_USE_CASES = [
+  {
+    title: 'Business Documents',
+    text: 'Teams update proposals, memos, policies, and client deliverables without recreating the whole file.',
+  },
+  {
+    title: 'Contracts',
+    text: 'Legal and business users add notes, change fields, and mark revisions before final approval.',
+  },
+  {
+    title: 'Reports',
+    text: 'Analysts and managers can correct labels, update summaries, and add supporting context.',
+  },
+  {
+    title: 'Forms',
+    text: 'Forms can be filled, marked, or prepared for the next reviewer in the workflow.',
+  },
+  {
+    title: 'Student Assignments',
+    text: 'Students can annotate feedback, fix cover pages, and prepare submission-ready PDFs.',
+  },
+  {
+    title: 'Government Documents',
+    text: 'Public forms and notices often require stamps, comments, or page-level corrections.',
+  },
+  {
+    title: 'Legal Documents',
+    text: 'Lawyers and paralegals use markup, highlights, and signatures during review cycles.',
+  },
+];
+
+const PDF_EDITOR_TABLE_ROWS = [
+  {
+    feature: 'Editing',
+    editor: 'Directly edits PDF text blocks and layout elements',
+    word: 'Best for rewriting full documents',
+  },
+  {
+    feature: 'Formatting',
+    editor: 'Keeps the PDF structure while updating selected objects',
+    word: 'Reflows content like a document draft',
+  },
+  {
+    feature: 'Sharing',
+    editor: 'Produces a final PDF ready for sharing or archival',
+    word: 'Usually exported to PDF before sending',
+  },
+  {
+    feature: 'Security',
+    editor: 'Preserves document format and can support controlled markup workflows',
+    word: 'Native document may be easier to modify',
+  },
+  {
+    feature: 'Collaboration',
+    editor: 'Useful for comments, annotations, and small edits',
+    word: 'Better for co-authoring and drafting',
+  },
+];
+
+const PDF_EDITOR_TIMELINE = [
+  'Upload the PDF file that needs changes.',
+  'Select the text block, annotation, or page area you want to update.',
+  'Add text, adjust existing content, or place visual markups where needed.',
+  'Review the live preview to confirm spacing and readability.',
+  'Generate the final PDF and download the edited file.',
+];
+
+const EDITING_PRACTICES = [
+  'Work from a clean source PDF whenever possible so text blocks are easier to select.',
+  'Keep edits focused and avoid changing the whole file if only a small section needs revision.',
+  'Use annotations for review comments and signatures for approval steps.',
+  'Check page flow after changes so headers, tables, and footers still read well.',
+  'Export and review the result before sending it to clients or stakeholders.',
+];
+
+const EDITING_MISTAKES = [
+  'Trying to rewrite a heavily scanned PDF without checking text readability first.',
+  'Using a word processor when the final deliverable must stay in PDF format.',
+  'Adding too many overlapping markups and making the page harder to read.',
+  'Ignoring font consistency and spacing after inserting new text.',
+  'Skipping the final review before download or sharing.',
+];
+
+const EDITING_BLOCKS = [
+  {
+    title: 'How PDF Editing Works',
+    text: 'A PDF editor usually identifies text blocks, page objects, and annotation layers, then lets you update them without rebuilding the entire file.',
+  },
+  {
+    title: 'What Are Annotations?',
+    text: 'Annotations are review marks such as highlights, notes, comments, arrows, and callouts used to explain changes or request action.',
+  },
+  {
+    title: 'What Are Digital Signatures?',
+    text: 'Digital signatures are approval marks used to show that a document was reviewed, accepted, or formally signed in a digital workflow.',
+  },
+];
+
+const EDIT_PDF_FAQS = [
+  [
+    'What is a PDF editor?',
+    'A PDF editor is a tool that lets you add text, mark up pages, move content, and make practical changes to a PDF file.',
+  ],
+  [
+    'Can I edit PDF files online?',
+    'Yes. An online PDF editor works in the browser, so you can upload a PDF, make changes, and download the updated file.',
+  ],
+  [
+    'Can I add text to a PDF?',
+    'Yes. You can place new text on top of a PDF to fill forms, add notes, or update missing information.',
+  ],
+  [
+    'Can I edit existing text in a PDF?',
+    'You can edit selected text blocks when the PDF contains readable text data. Scanned PDFs often need extra cleanup first.',
+  ],
+  [
+    'Can I annotate a PDF?',
+    'Yes. Highlighting, comments, underlines, and callouts are common PDF annotation tools.',
+  ],
+  [
+    'Can I add a signature to a PDF?',
+    'Yes. Many PDF editors let you insert a signature image or signature field for approval workflows.',
+  ],
+  [
+    'Is online PDF editing free?',
+    'This tool is offered free in the browser so you can make everyday edits without installing desktop software.',
+  ],
+  [
+    'What PDF files are easiest to edit?',
+    'Text-based PDFs are easiest because the editor can recognize lines and paragraph blocks more reliably.',
+  ],
+  [
+    'Can I reorder PDF pages?',
+    'Yes. Page-level editing is useful when a file needs a different reading order or revised structure.',
+  ],
+  [
+    'What is the difference between annotation and editing?',
+    'Editing changes the content itself, while annotation adds marks or comments without rewriting the original message.',
+  ],
+  [
+    'Why are PDF signatures important?',
+    'Signatures help show approval, reduce confusion, and make digital workflows easier to track.',
+  ],
+  [
+    'Can students use a PDF editor?',
+    'Yes. Students commonly use PDF editors to mark feedback, fix details, and prepare assignment files.',
+  ],
+  [
+    'Can businesses use PDF editors?',
+    'Yes. Businesses use them to update contracts, reports, forms, and client-facing documents quickly.',
+  ],
+  [
+    'Are PDF editors useful for legal documents?',
+    'Yes. Legal teams use them for review marks, signatures, and controlled changes on formal documents.',
+  ],
+  [
+    'What should I do before exporting a PDF?',
+    'Check text placement, page order, and markup visibility, then generate a final copy for download.',
+  ],
+];
+
+const RELATED_TOOLS = [
+  { href: '/tools/pdf-compressor', label: 'PDF Compressor' },
+  { href: '/tools/pdf-merge', label: 'PDF Merge' },
+  { href: '/tools/word-to-pdf', label: 'Word To PDF' },
+  { href: '/tools/image-to-pdf', label: 'Image To PDF' },
+  { href: '/tools/image-compressor', label: 'Image Compressor' },
+  { href: '/tools/image-resizer', label: 'Image Resizer' },
+  { href: '/tools/qr-generator', label: 'QR Generator' },
+  { href: '/tools/word-counter', label: 'Word Counter' },
+];
 
 export default function EditPdfPage() {
   const [fileName, setFileName] = useState('');
@@ -878,7 +1140,376 @@ export default function EditPdfPage() {
             </div>
           </section>
         </div>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-blue-600">Short Answer</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">What Is A PDF Editor?</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
+              A PDF editor is a tool that lets you modify PDF content without rebuilding the document
+              from scratch. It is used to add text, annotate pages, place signatures, highlight
+              important lines, update small mistakes, and prepare files for review or sharing.
+            </p>
+          </div>
+
+          <div className="mt-6 grid gap-4 lg:grid-cols-3">
+            <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-6">
+              <h3 className="text-xl font-semibold text-slate-900">What Is A PDF File?</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                A PDF file is a fixed-layout document format designed to look the same across devices,
+                browsers, and operating systems. That makes PDFs ideal for forms, reports, contracts,
+                manuals, and other documents that need consistent presentation.
+              </p>
+            </article>
+            <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-6">
+              <h3 className="text-xl font-semibold text-slate-900">How PDF Editing Works</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                The editor identifies text blocks and page objects, then lets you update or overlay
+                content in place. For review work, it can also add annotation layers without changing
+                the original document structure.
+              </p>
+            </article>
+            <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-6">
+              <h3 className="text-xl font-semibold text-slate-900">Why PDF Editing Is Important</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                PDF editing matters because teams often need to fix details, sign pages, or add
+                comments after a file is already exported. A fast editor saves time and keeps the
+                workflow inside the PDF format.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+            <SectionHeading
+              eyebrow="Workflow"
+              title="How To Edit PDF Files Online"
+              description="The usual flow is upload, select content, make edits, review the result, and download the final file."
+            />
+            <ol className="mt-6 space-y-3 text-sm leading-7 text-slate-600">
+              {PDF_EDITOR_TIMELINE.map((step, index) => (
+                <li key={step} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <span className="font-semibold text-slate-900">{index + 1}.</span> {step}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+            <SectionHeading
+              eyebrow="Benefits"
+              title="Benefits Of Editing PDFs"
+              description="Online editing keeps work moving when you need a quick update instead of a complete rewrite."
+            />
+            <ul className="mt-6 space-y-3 text-sm leading-7 text-slate-600">
+              {PDF_EDITOR_BENEFITS.map((item) => (
+                <li key={item} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="Features"
+            title="Features Of A PDF Editor"
+            description="Most practical PDF editors focus on small, useful changes rather than forcing a full document rebuild."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {PDF_EDITOR_FEATURES.map((item) => (
+              <article key={item.title} className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="Explanation"
+            title="Detailed Explanation Of PDF Editing"
+            description="Editing, annotations, and signatures solve different document tasks, so it helps to understand each one clearly."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            {EDITING_BLOCKS.map((item) => (
+              <article key={item.title} className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="Use Cases"
+            title="Common Use Cases"
+            description="PDF editing shows up in nearly every document workflow where a file needs a quick revision."
+          />
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {PDF_EDITOR_USE_CASES.map((item) => (
+              <article key={item.title} className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-slate-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{item.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="Comparison"
+            title="PDF Editor vs Word Processor"
+            description="A PDF editor keeps you in the final document format, while a word processor is better for drafting and rewriting from scratch."
+          />
+          <div className="mt-6">
+            <DataTable columns={['Feature', 'PDF Editor', 'Word Processor']} rows={PDF_EDITOR_TABLE_ROWS} />
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-2">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+            <SectionHeading
+              eyebrow="Best Practices"
+              title="PDF Editing Best Practices"
+              description="Good editing habits help keep the document readable, professional, and ready to share."
+            />
+            <ul className="mt-6 space-y-3 text-sm leading-7 text-slate-600">
+              {EDITING_PRACTICES.map((item) => (
+                <li key={item} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+            <SectionHeading
+              eyebrow="Mistakes"
+              title="Common PDF Editing Mistakes"
+              description="These mistakes usually happen when the editor is used for the wrong kind of change or the file is not reviewed before download."
+            />
+            <ul className="mt-6 space-y-3 text-sm leading-7 text-slate-600">
+              {EDITING_MISTAKES.map((item) => (
+                <li key={item} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-3">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:col-span-1">
+            <SectionHeading
+              eyebrow="Business"
+              title="PDF Editing For Businesses"
+              description="Businesses rely on PDFs when documents must stay consistent across teams and clients."
+            />
+          </div>
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:col-span-2">
+            <p className="text-sm leading-7 text-slate-600">
+              Companies use PDF editing to update proposals, revise policy text, insert comments, and
+              add signatures before sending documents out for approval. Online editing is especially
+              useful when teams need a fast turnaround without installing desktop software.
+            </p>
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-3">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:col-span-1">
+            <SectionHeading
+              eyebrow="Students"
+              title="PDF Editing For Students"
+              description="Students often need to annotate assignments, fix cover pages, or prepare submission-ready files."
+            />
+          </div>
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:col-span-2">
+            <p className="text-sm leading-7 text-slate-600">
+              Students use PDF editing to add feedback notes, highlight study material, and correct
+              small document issues before final submission. It is also helpful for presentations,
+              lab reports, and signed forms that must stay in PDF format.
+            </p>
+          </div>
+        </section>
+
+        <section className="grid gap-6 lg:grid-cols-3">
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:col-span-1">
+            <SectionHeading
+              eyebrow="Legal"
+              title="PDF Editing For Legal Documents"
+              description="Legal teams need careful markup because their files often carry review history and approval steps."
+            />
+          </div>
+          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm lg:col-span-2">
+            <p className="text-sm leading-7 text-slate-600">
+              Legal professionals use annotations, signatures, highlights, and page management to
+              keep contracts and case files organized. Even small edits need to be easy to review,
+              which is why PDF is still the preferred format for many legal workflows.
+            </p>
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="Summary"
+            title="Benefits Of Online PDF Editing"
+            description="Editing in the browser keeps the workflow simple for everyday document updates."
+          />
+          <p className="mt-4 text-sm leading-7 text-slate-600">
+            Online PDF editing helps users make small corrections, annotate documents, and prepare
+            files for sharing without moving between multiple apps. That reduces friction for
+            business teams, students, and legal users who need a fast and reliable way to finish
+            document tasks.
+          </p>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="FAQ"
+            title="Frequently Asked Questions"
+            description="These answers are concise enough for quick readers and detailed enough for AI search extraction."
+          />
+          <div className="mt-6 space-y-4">
+            {EDIT_PDF_FAQS.map(([question, answer]) => (
+              <details key={question} className="group rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <summary className="cursor-pointer list-none text-base font-semibold text-slate-900">
+                  <span className="flex items-center justify-between gap-4">
+                    {question}
+                    <span className="text-slate-400 transition group-open:rotate-45">+</span>
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm">
+          <SectionHeading
+            eyebrow="Related Tools"
+            title="Related Tools"
+            description="Continue the document workflow with the tools below."
+          />
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {RELATED_TOOLS.map((item) => (
+              <Link
+                key={`${item.href}-${item.label}`}
+                href={item.href}
+                className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: 'Edit PDF Online Free - Add Text to PDF Files Instantly | MyToolsHub',
+            url: 'https://toolshub.cyphersol.com/tools/edit-pdf',
+            description:
+              'Add text, annotations, and labels to any PDF file online for free. Edit PDF documents without Adobe Acrobat - works in your browser, no signup required.',
+            isPartOf: {
+              '@type': 'WebSite',
+              name: 'MyToolsHub',
+              url: 'https://toolshub.cyphersol.com',
+            },
+            inLanguage: 'en',
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'SoftwareApplication',
+            name: 'Edit PDF',
+            applicationCategory: 'BusinessApplication',
+            operatingSystem: 'Web Browser',
+            offers: {
+              '@type': 'Offer',
+              price: '0',
+              priceCurrency: 'USD',
+            },
+            url: 'https://toolshub.cyphersol.com/tools/edit-pdf',
+            description:
+              'Edit PDF files online for free by adding text, annotations, and signatures directly in your browser.',
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://toolshub.cyphersol.com',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Tools',
+                item: 'https://toolshub.cyphersol.com/tools',
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: 'Edit PDF',
+                item: 'https://toolshub.cyphersol.com/tools/edit-pdf',
+              },
+            ],
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'HowTo',
+            name: 'How To Edit PDF Files Online',
+            totalTime: 'PT2M',
+            step: PDF_EDITOR_TIMELINE.map((step) => ({
+              '@type': 'HowToStep',
+              name: step,
+              text: step,
+            })),
+          }),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: EDIT_PDF_FAQS.map(([question, answer]) => ({
+              '@type': 'Question',
+              name: question,
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: answer,
+              },
+            })),
+          }),
+        }}
+      />
     </div>
   );
 }
