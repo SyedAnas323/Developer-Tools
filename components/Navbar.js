@@ -22,6 +22,12 @@ const tools = [
   { name: 'Edit PDF', path: '/tools/edit-pdf' },
   { name: 'PDF Merge', path: '/tools/pdf-merge' },
   { name: 'Youtube Downloader', path: '/tools/youtube-downloader' },
+  { name: 'TikTok Downloader', path: '/tools/tiktok-downloader' },
+  { name: 'Facebook Downloader', path: '/tools/facebook-downloader' },
+  { name: 'Instagram Downloader', path: '/tools/instagram-downloader' },
+  { name: 'X (Twitter) Downloader', path: '/tools/x-twitter-downloader' },
+  { name: 'Pinterest Downloader', path: '/tools/pinterest-downloader' },
+  { name: 'LinkedIn Downloader', path: '/tools/linkedin-downloader' },
 ];
 
 export default function Navbar() {

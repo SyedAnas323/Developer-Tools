@@ -121,6 +121,42 @@ export default function Home() {
       desc: 'Download YouTube videos in various formats.',
       icon: '⬇️',
     },
+    {
+      name: 'TikTok Downloader',
+      path: '/tools/tiktok-downloader',
+      desc: 'Open the TikTok downloader website in one click.',
+      icon: '🎵',
+    },
+    {
+      name: 'Facebook Downloader',
+      path: '/tools/facebook-downloader',
+      desc: 'Open the Facebook downloader website in one click.',
+      icon: '📘',
+    },
+    {
+      name: 'Instagram Downloader',
+      path: '/tools/instagram-downloader',
+      desc: 'Open the Instagram downloader website in one click.',
+      icon: '📸',
+    },
+    {
+      name: 'X (Twitter) Downloader',
+      path: '/tools/x-twitter-downloader',
+      desc: 'Open the X downloader website in one click.',
+      icon: '𝕏',
+    },
+    {
+      name: 'Pinterest Downloader',
+      path: '/tools/pinterest-downloader',
+      desc: 'Open the Pinterest downloader website in one click.',
+      icon: '📍',
+    },
+    {
+      name: 'LinkedIn Downloader',
+      path: '/tools/linkedin-downloader',
+      desc: 'Open the LinkedIn downloader website in one click.',
+      icon: '💼',
+    },
   ];
 
   const toolCount = tools.length;

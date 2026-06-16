@@ -19,6 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'qr-generator',
     'word-counter',
     'word-to-pdf',
+    'facebook-downloader',
+    'instagram-downloader',
+    'x-twitter-downloader',
+    'pinterest-downloader',
+    'linkedin-downloader',
+    'tiktok-downloader',
     'youtube-downloader',
     'youtube-thumbnail',
   ];
