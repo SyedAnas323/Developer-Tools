@@ -1,10 +1,15 @@
 import { notFound } from 'next/navigation';
 import { ToolSeoPage } from '../seo-page';
-import { createToolMetadata } from '../metadata';
 import { getToolSeoPage } from '../tool-seo-data';
+import { createToolMetadata } from '../metadata';
 
-export function generateMetadata() {
-  const page = getToolSeoPage('pinterest-downloader');
+type PageProps = {
+  params: { slug: string };
+};
+
+export async function generateMetadata({ params }: PageProps) {
+  const { slug } = params;
+  const page = getToolSeoPage(slug);
 
   if (!page) {
     return {};
@@ -14,12 +19,13 @@ export function generateMetadata() {
     title: page.title,
     description: page.description,
     keywords: page.keywords,
-    slug: page.slug,
+    slug,
   });
 }
 
-export default function PinterestDownloaderPage() {
-  const page = getToolSeoPage('pinterest-downloader');
+export default async function ToolSeoRoutePage({ params }: PageProps) {
+  const { slug } = params;
+  const page = getToolSeoPage(slug);
 
   if (!page) {
     notFound();

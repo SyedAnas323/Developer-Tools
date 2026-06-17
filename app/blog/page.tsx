@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BLOG_POSTS } from "./blog-data";
 
 export const metadata = {
   title: "Blog | MyToolsHub",
@@ -98,6 +99,7 @@ const posts = [
       "Combine multiple PDF documents into one clean file with a fast and reliable online workflow.",
     readTime: "8 min read",
   },
+  ...BLOG_POSTS,
 ];
 
 export default function BlogPage() {

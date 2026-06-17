@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { TOOL_FAQS } from './faq-data';
+import { TOOL_LABELS } from './tool-seo-data';
 import { ToolBreadcrumbSchema, ToolWebApplicationSchema } from './metadata';
 
 type ToolContent = {
@@ -37,32 +38,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
   'tiktok-downloader': null,
   'youtube-thumbnail': null,
   'youtube-downloader': null,
-};
-
-const TOOL_LABELS: Record<string, string> = {
-  'background-remover': 'Background Remover',
-  'edit-pdf': 'Edit PDF',
-  'favicon-generator': 'Favicon Generator',
-  'image-compressor': 'Image Compressor',
-  'image-cropper': 'Image Cropper',
-  'image-format-converter': 'Image Format Converter',
-  'image-resizer': 'Image Resizer',
-  'image-to-pdf': 'Image To PDF',
-  'json-formatter': 'JSON Formatter',
-  'password-generator': 'Password Generator',
-  'pdf-compressor': 'PDF Compressor',
-  'pdf-merge': 'PDF Merge',
-  'qr-generator': 'QR Generator',
-  'word-counter': 'Word Counter',
-  'word-to-pdf': 'Word To PDF',
-  'facebook-downloader': 'Facebook Downloader',
-  'instagram-downloader': 'Instagram Downloader',
-  'x-twitter-downloader': 'X (Twitter) Downloader',
-  'pinterest-downloader': 'Pinterest Downloader',
-  'linkedin-downloader': 'LinkedIn Downloader',
-  'tiktok-downloader': 'TikTok Downloader',
-  'youtube-downloader': 'YouTube Downloader',
-  'youtube-thumbnail': 'YouTube Thumbnail Downloader',
 };
 
 const RELATED_LINKS: Record<string, Array<{ href: string; anchor: string }>> = {

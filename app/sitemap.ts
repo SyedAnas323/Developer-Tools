@@ -1,33 +1,11 @@
-import { MetadataRoute } from 'next'
- 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://toolshub.cyphersol.com'
+import { MetadataRoute } from 'next';
+import { BLOG_POSTS } from './blog/blog-data';
+import { TOOL_LABELS } from './tools/tool-seo-data';
 
-  const tools = [
-    'background-remover',
-    'edit-pdf',
-    'favicon-generator',
-    'image-compressor',
-    'image-format-converter',
-    'image-cropper',
-    'image-resizer',
-    'image-to-pdf',
-    'json-formatter',
-    'password-generator',
-    'pdf-compressor',
-    'pdf-merge',
-    'qr-generator',
-    'word-counter',
-    'word-to-pdf',
-    'facebook-downloader',
-    'instagram-downloader',
-    'x-twitter-downloader',
-    'pinterest-downloader',
-    'linkedin-downloader',
-    'tiktok-downloader',
-    'youtube-downloader',
-    'youtube-thumbnail',
-  ];
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = 'https://toolshub.cyphersol.com';
+
+  const tools = Object.keys(TOOL_LABELS);
 
   const toolRoutes = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool}`,
@@ -50,6 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'strong-password-generator-guide',
     'how-to-compress-pdf-free',
     'how-to-merge-pdf-files',
+    ...BLOG_POSTS.map((post) => post.slug),
   ];
 
   const blogRoutes = blogPosts.map((post) => ({
@@ -74,5 +53,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...toolRoutes,
     ...blogRoutes,
-  ]
+  ];
 }
