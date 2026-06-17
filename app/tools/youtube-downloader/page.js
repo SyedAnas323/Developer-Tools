@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 function formatBytes(bytes) {
   const value = Number(bytes);
@@ -54,22 +54,78 @@ function DownloadIcon({ className = 'h-4 w-4' }) {
   );
 }
 
-async function saveResponseAsDownload(response, fallbackName) {
-  const blob = await response.blob();
-  const objectUrl = URL.createObjectURL(blob);
-  const contentDisposition = response.headers.get('content-disposition') || '';
-  const match = contentDisposition.match(/filename="([^"]+)"/i);
+function DownloadStatusBanner({ status }) {
+  if (!status) {
+    return null;
+  }
 
-  const link = document.createElement('a');
-  link.href = objectUrl;
-  link.download = match?.[1] || fallbackName;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
+  const isDone = status.phase === 'done';
+  const isActive = !isDone;
 
-  window.setTimeout(() => {
-    URL.revokeObjectURL(objectUrl);
-  }, 1000);
+  return (
+    <div
+      className={`fixed left-1/2 top-4 z-[60] w-[min(92vw,760px)] -translate-x-1/2 overflow-hidden rounded-[1.75rem] border shadow-[0_24px_80px_-28px_rgba(15,23,42,0.35)] backdrop-blur-xl ${
+        isDone
+          ? 'border-emerald-200/80 bg-gradient-to-r from-emerald-50/95 via-white/95 to-cyan-50/95 text-slate-900'
+          : 'border-slate-200/80 bg-gradient-to-r from-slate-900/95 via-slate-800/95 to-blue-900/95 text-white'
+      }`}
+    >
+      <div className={`absolute inset-x-0 top-0 h-1 ${isDone ? 'bg-emerald-400' : 'bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-400'}`} />
+      <div className="flex items-start gap-4 px-5 py-4 sm:px-6 sm:py-5">
+        <div
+          className={`mt-0.5 flex h-12 w-12 flex-none items-center justify-center rounded-2xl ${
+            isDone ? 'bg-emerald-100 text-emerald-700' : 'bg-white/10 text-sky-300'
+          }`}
+        >
+          {isDone ? (
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 12l4 4L19 6" />
+            </svg>
+          ) : (
+            <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" className="opacity-25" stroke="currentColor" strokeWidth="3" />
+              <path className="opacity-90" fill="currentColor" d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z" />
+            </svg>
+          )}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-500/90">
+              {isDone ? 'Download complete' : 'Downloading'}
+            </p>
+            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] ${isDone ? 'bg-emerald-100 text-emerald-700' : 'bg-white/10 text-sky-200'}`}>
+              {status.progress}%
+            </span>
+          </div>
+
+          <p className={`mt-2 text-sm sm:text-[15px] ${isDone ? 'text-slate-700' : 'text-slate-100'}`}>
+            {status.message}
+          </p>
+
+          {isActive ? (
+            <div className="mt-4">
+              <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-[0.18em] text-slate-300">
+                <span>{status.step}</span>
+                <span className="tabular-nums">{status.progress}%</span>
+              </div>
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-400 transition-all duration-300 ease-out"
+                  style={{ width: `${status.progress}%` }}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="mt-4 flex items-center gap-2 text-sm text-emerald-700">
+              <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
+              Sent to browser downloads
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function SectionHeading({ eyebrow, title, description }) {
@@ -294,6 +350,22 @@ export default function YoutubeDownloaderPage() {
   const [downloadingId, setDownloadingId] = useState('');
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [downloadStatus, setDownloadStatus] = useState(null);
+  const clearDownloadStatusTimer = useRef(null);
+  const progressTickTimer = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (clearDownloadStatusTimer.current) {
+        window.clearTimeout(clearDownloadStatusTimer.current);
+        clearDownloadStatusTimer.current = null;
+      }
+      if (progressTickTimer.current) {
+        window.clearInterval(progressTickTimer.current);
+        progressTickTimer.current = null;
+      }
+    };
+  }, []);
 
   const videoMedias = useMemo(
     () => (result?.medias || []).filter((item) => item.type === 'video'),
@@ -337,7 +409,7 @@ export default function YoutubeDownloaderPage() {
   }
 
   async function handleDownload(item, title) {
-    const downloadUrl = buildDownloadUrl(item, title, 'fetch');
+    const downloadUrl = buildDownloadUrl(item, title, 'download');
     setDownloadingId(item.id);
     setError('');
     const fallbackName = `${title || 'youtube-file'}-${item.quality || item.type || 'download'}${
@@ -345,13 +417,72 @@ export default function YoutubeDownloaderPage() {
     }`;
 
     try {
-      const response = await fetch(downloadUrl);
-
-      if (!response.ok) {
-        throw new Error('Something went wrong. Please try again.');
+      if (clearDownloadStatusTimer.current) {
+        window.clearTimeout(clearDownloadStatusTimer.current);
+        clearDownloadStatusTimer.current = null;
+      }
+      if (progressTickTimer.current) {
+        window.clearInterval(progressTickTimer.current);
+        progressTickTimer.current = null;
       }
 
-      await saveResponseAsDownload(response, fallbackName);
+      setDownloadStatus({
+        phase: 'starting',
+        progress: 8,
+        step: 'Preparing file',
+        message: `Launching ${fallbackName} in your browser download tray.`,
+      });
+
+      progressTickTimer.current = window.setInterval(() => {
+        setDownloadStatus((current) => {
+          if (!current || current.phase === 'done') {
+            return current;
+          }
+
+          const nextProgress = Math.min((current.progress || 0) + 12, 92);
+          const nextStep =
+            nextProgress < 35
+              ? 'Preparing file'
+              : nextProgress < 70
+                ? 'Sending to browser'
+                : 'Finalizing download';
+
+          return {
+            ...current,
+            phase: 'active',
+            progress: nextProgress,
+            step: nextStep,
+          };
+        });
+      }, 180);
+
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fallbackName;
+      link.rel = 'noopener noreferrer';
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.setTimeout(() => {
+        if (progressTickTimer.current) {
+          window.clearInterval(progressTickTimer.current);
+          progressTickTimer.current = null;
+        }
+        setDownloadStatus({
+          phase: 'done',
+          title: 'Download complete',
+          progress: 100,
+          step: 'Completed',
+          message: `${fallbackName} is now in your browser downloads.`,
+        });
+      }, 1200);
+
+      clearDownloadStatusTimer.current = window.setTimeout(() => {
+        setDownloadStatus(null);
+        clearDownloadStatusTimer.current = null;
+      }, 5000);
     } catch {
       const message = 'Something went wrong. Please try again.';
       setError(message);
@@ -363,6 +494,7 @@ export default function YoutubeDownloaderPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-10 text-slate-900">
+      <DownloadStatusBanner status={downloadStatus} />
       <div className="mx-auto max-w-6xl">
         <section className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
           <div className="max-w-3xl">

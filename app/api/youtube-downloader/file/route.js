@@ -71,6 +71,12 @@ export async function GET(request) {
       );
     }
 
+    // Vercel serverless often fails or times out when proxying large media streams.
+    // In production, let the browser go directly to the media URL for downloads.
+    if (mode === 'download' && process.env.VERCEL === '1') {
+      return NextResponse.redirect(parsed.toString(), 302);
+    }
+
     let upstreamResponse = await fetch(parsed.toString(), {
       method: 'GET',
       headers: {
@@ -90,6 +96,10 @@ export async function GET(request) {
       (upstreamResponse.status === 401 || upstreamResponse.status === 403) &&
       isProxyBlockedHost(parsed.hostname)
     ) {
+      if (mode === 'download') {
+        return NextResponse.redirect(parsed.toString(), 302);
+      }
+
       return NextResponse.json(
         {
           error: true,
@@ -100,6 +110,10 @@ export async function GET(request) {
     }
 
     if (!upstreamResponse.ok || !upstreamResponse.body) {
+      if (mode === 'download') {
+        return NextResponse.redirect(parsed.toString(), 302);
+      }
+
       return NextResponse.json(
         {
           error: true,
