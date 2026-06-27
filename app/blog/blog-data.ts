@@ -44,10 +44,10 @@ export const BLOG_POSTS: BlogPost[] = [
       ['Should I mention permission in the copy?', 'Yes. A short compliance note helps the page read naturally and keeps the wording safer.'],
     ],
     relatedLinks: [
-      { href: '/tools/youtube-downloader', label: 'YouTube Downloader' },
       { href: '/tools/youtube-to-mp4', label: 'YouTube to MP4 Converter' },
       { href: '/tools/youtube-to-mp3', label: 'YouTube to MP3 Converter' },
-      { href: '/tools/youtube-thumbnail-downloader', label: 'YouTube Thumbnail Downloader' },
+      { href: '/tools/youtube-tag-extractor', label: 'YouTube Tag Extractor' },
+      { href: '/tools/youtube-description-extractor', label: 'YouTube Description Extractor' },
     ],
   },
   {
@@ -172,4 +172,3 @@ export const BLOG_POSTS: BlogPost[] = [
 export function getBlogPost(slug: string) {
   return BLOG_POSTS.find((post) => post.slug === slug) || null;
 }
-

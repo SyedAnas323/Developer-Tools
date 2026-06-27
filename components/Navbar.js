@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { HIDDEN_TOOL_SLUGS } from '../app/tools/tool-seo-data';
 
 const tools = [
   { name: 'Image Compressor', path: '/tools/image-compressor' },
   { name: 'PDF Compressor', path: '/tools/pdf-compressor' },
   { name: 'QR Code Generator', path: '/tools/qr-generator' },
-  { name: 'YouTube Thumbnail', path: '/tools/youtube-thumbnail' },
   { name: 'Image to PDF', path: '/tools/image-to-pdf' },
   { name: 'JSON Formatter', path: '/tools/json-formatter' },
   { name: 'Password Generator', path: '/tools/password-generator' },
@@ -21,14 +21,13 @@ const tools = [
   { name: 'Word to PDF', path: '/tools/word-to-pdf' },
   { name: 'Edit PDF', path: '/tools/edit-pdf' },
   { name: 'PDF Merge', path: '/tools/pdf-merge' },
-  { name: 'Youtube Downloader', path: '/tools/youtube-downloader' },
   { name: 'TikTok Downloader', path: '/tools/tiktok-downloader' },
   { name: 'Facebook Downloader', path: '/tools/facebook-downloader' },
   { name: 'Instagram Downloader', path: '/tools/instagram-downloader' },
   { name: 'X (Twitter) Downloader', path: '/tools/x-twitter-downloader' },
   { name: 'Pinterest Downloader', path: '/tools/pinterest-downloader' },
   { name: 'LinkedIn Downloader', path: '/tools/linkedin-downloader' },
-];
+].filter((tool) => !HIDDEN_TOOL_SLUGS.has(tool.path.split('/').pop()));
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);

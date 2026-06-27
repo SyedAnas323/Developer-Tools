@@ -12,6 +12,12 @@ export type ToolSeoPage = {
   relatedLinks: Array<{ href: string; label: string }>;
 };
 
+export const HIDDEN_TOOL_SLUGS = new Set([
+  'youtube-downloader',
+  'youtube-thumbnail',
+  'youtube-thumbnail-downloader',
+]);
+
 export const TOOL_LABELS: Record<string, string> = {
   'background-remover': 'Background Remover',
   'edit-pdf': 'Edit PDF',
@@ -367,7 +373,7 @@ function buildRelatedLinks(slug: string) {
   const platform = detectPlatform(slug);
   const links = PLATFORM_LINKS[platform] || PLATFORM_LINKS.general;
   return links
-    .filter((item) => item !== slug)
+    .filter((item) => item !== slug && !HIDDEN_TOOL_SLUGS.has(item))
     .slice(0, 4)
     .map((item) => ({
       href: `/tools/${item}`,

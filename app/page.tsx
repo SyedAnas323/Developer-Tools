@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useDeferredValue, useMemo, useState } from 'react';
+import { HIDDEN_TOOL_SLUGS } from './tools/tool-seo-data';
 
 type Tool = {
   name: string;
@@ -157,7 +158,7 @@ export default function Home() {
       desc: 'Open the LinkedIn downloader website in one click.',
       icon: '💼',
     },
-  ];
+  ].filter((tool) => !HIDDEN_TOOL_SLUGS.has(tool.path.split('/').pop() || ''));
 
   const toolCount = tools.length;
   const toolNames = tools.map((tool) => tool.name).join(', ');
@@ -184,11 +185,11 @@ export default function Home() {
       href: '/tools/edit-pdf',
     },
     {
-      title: 'Find and save YouTube media from one simple page',
+      title: 'Browse social media media tools from one simple page',
       excerpt:
-        'Paste a video link, review the available media options, and move quickly to the format you need.',
+        'Open the right downloader or helper tool and move quickly to the format or asset you need.',
       image: '/images/blog-youtube-download.svg',
-      href: '/tools/youtube-downloader',
+      href: '/tools/tiktok-downloader',
     },
   ];
   const deferredSearchQuery = useDeferredValue(searchQuery);

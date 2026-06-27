@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next';
 import { BLOG_POSTS } from './blog/blog-data';
-import { TOOL_LABELS } from './tools/tool-seo-data';
+import { HIDDEN_TOOL_SLUGS, TOOL_LABELS } from './tools/tool-seo-data';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://toolshub.cyphersol.com';
 
-  const tools = Object.keys(TOOL_LABELS);
+  const tools = Object.keys(TOOL_LABELS).filter((slug) => !HIDDEN_TOOL_SLUGS.has(slug));
 
   const toolRoutes = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool}`,
